@@ -5,6 +5,8 @@
  */
 package com.mycompany.gerador;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -13,19 +15,19 @@ import java.util.List;
  */
 public class Ponto implements Comparable<Ponto> {
 
-    public Ponto(int x, int y, int ret_list_size) {
+    public Ponto(int x, int y) {
         this.x = x;
         this.y = y;
-        ret_list = new int[ret_list_size];
     }
-
+    int id;
     int x;
     int y;
-    public int[] ret_list;
-    int curr_ret;
-
-    public void addRet() {
-
+    public List<Ret> ret_list = new ArrayList<>();
+    public void setId(int id){
+        this.id = id;
+    }
+    public void addRet(Ret ret) {
+        ret_list.add(ret);
     }
 
     @Override
@@ -35,7 +37,16 @@ public class Ponto implements Comparable<Ponto> {
 
     @Override
     public int compareTo(Ponto o) {
-        return (o.x - this.x) + (o.y - this.y);
+        int aux = 0;
+        if(o.x == this.x){
+            if(o.y == this.y){
+                return aux;
+            } else {
+                return o.y - this.y;
+            }
+        } else {
+            return o.x - this.x;
+        }
     }
 
 }

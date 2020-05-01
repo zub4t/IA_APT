@@ -14,18 +14,15 @@ import java.util.List;
  */
 public class Ret implements Comparable<Ret> {
 
-    public int[] pontos_list;
+    public List<Integer> pontos_list = new ArrayList<>();
     private int id;
-    private int cur_ponto = 0;
 
-    public Ret(int id, int pontos_list_size) {
-        pontos_list = new int[pontos_list_size];
+    public Ret(int id) {
         this.id = id;
     }
 
     public void addPonto(int ponto_id) {
-        pontos_list[cur_ponto] = ponto_id;
-        cur_ponto++;
+        pontos_list.add(ponto_id);
     }
 
     public int getId() {
