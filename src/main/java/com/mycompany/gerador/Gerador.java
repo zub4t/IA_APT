@@ -35,33 +35,6 @@ public class Gerador {
         }
     }
 
-    public static int decrease_key(int[] ponto_quant_ret, int size, Ret[] retangulos, Ponto[] pontos) {
-        int guardas = 0;
-        Heapmax heap = new Heapmax(ponto_quant_ret, size - 1);
-        while (!heap.isEmpty()) {
-            for(int i = 1; i <= heap.size; i++)
-                heap.heapify(i);
-            int ponto_candidato = heap.extractMax();
-            
-            if (!pontos[ponto_candidato].ret_list.isEmpty()) {
-                System.out.println("Ponto guardado = x - " + pontos[ponto_candidato].x + " ; y - " + pontos[ponto_candidato].y);
-                for (Ret retangulo : pontos[ponto_candidato].ret_list) {
-                    System.out.print(retangulo.getId() + " ");
-                }
-                System.out.println();
-                guardas++;
-                for (Ret retangulo : pontos[ponto_candidato].ret_list) {
-                    retangulo.pontos_list.remove((Integer) ponto_candidato);
-                    for (int ponto_id : retangulo.pontos_list) {
-                        pontos[ponto_id].ret_list.remove(retangulo);
-                        heap.increaseKey(ponto_id, pontos[ponto_id].ret_list.size());
-                    }
-                }
-            }
-        }
-        return guardas;
-    }
-
     public static void main(String[] args) {
         Ret[] retangulos = null;
         Ponto[] pontos = null;
@@ -113,8 +86,18 @@ public class Gerador {
             ponto_quant_ret[i] = pontos[i].ret_list.size();
             System.out.print(ponto_quant_ret[i] + " ");
         }
+        
+        int[] ret_quant_ponto = new int[num_ret + 1];
+        for(int i = 1; i <= num_ret; i++){
+            ret_quant_ponto[i] = retangulos[i].pontos_guardados;
+        }
         System.out.println();
-        System.out.print(decrease_key(ponto_quant_ret, cur_ponto_id, retangulos, pontos));
+        // Greedy 1 = (orientada por vértices)  colocar um guarda no vértice que é partilhado por mais retângulos ainda não cobertos
+        //System.out.println("Greedy 1 = " + Greedy1.decrease_key(ponto_quant_ret, cur_ponto_id, retangulos_copy, pontos_copy));
+         //Greedy 2 = (orientada por retângulos) escolher o retângulo ainda não coberto que tenha menos vértices incidentes e colocar um guarda num desses vértices que seja partilhado por mais retângulos ainda não cobertos
+        //System.out.println("Greedy 2 = " + Greedy2.increase_key(ret_quant_ponto, num_ret, retangulos, pontos));
+        // Greedy 3 = (orientada por retângulos) variante de 2. em que, em caso de igualdade entre vértices, opta pelo que cobre retângulos que globalmente tenham mais vértices incidentes
+        System.out.println("Greedy 3 = " + Greedy3.increase_key(ret_quant_ponto, num_ret, retangulos, pontos));
     }
 
 }

@@ -16,7 +16,8 @@ public class Ret implements Comparable<Ret> {
 
     public List<Integer> pontos_list = new ArrayList<>();
     private int id;
-
+    boolean guardado = false;
+    int pontos_guardados = 0;
     public Ret(int id) {
         this.id = id;
     }

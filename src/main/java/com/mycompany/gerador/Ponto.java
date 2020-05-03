@@ -22,6 +22,8 @@ public class Ponto implements Comparable<Ponto> {
     int id;
     int x;
     int y;
+    int ret_guardados = 0;
+    boolean guardado = false;
     public List<Ret> ret_list = new ArrayList<>();
     public void setId(int id){
         this.id = id;
@@ -29,6 +31,7 @@ public class Ponto implements Comparable<Ponto> {
     public void addRet(Ret ret) {
         ret_list.add(ret);
     }
+    
 
     @Override
     public String toString() {
