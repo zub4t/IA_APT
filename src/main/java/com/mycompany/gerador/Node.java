@@ -21,7 +21,7 @@ public class Node implements Comparable<Node> {
     public List<Node> ligacoes = new ArrayList<>();
     public Node pai;
     public Queue<Integer> ord = new LinkedList<>();
-
+    public int altura = 0;
     public Node(int n[], Ponto[] pontos) {
         this.configuracao_atual = new int[n.length];
         this.pontos = new Ponto[pontos.length];

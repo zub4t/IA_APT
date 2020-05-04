@@ -65,51 +65,6 @@ public class Gerador {
         }
         return guardas;
     }
-
-    public void chooses(int arr[]) {
-    }
-
-    public static void BFS(Node root) {
-        List<Node> list = new ArrayList<>();
-        Map<Node, Boolean> map = new TreeMap<>();
-        list.add(root);
-        while (!list.isEmpty()) {
-            Node current = list.remove(0);
-            if (teste(current) == 0) {
-                System.out.println("----------------");
-                System.out.println("nova solução");
-                for (int i : current.ord) {
-                    System.out.println("guardar ponto de id " + i);
-                    for (Ret ret : pontos[i].ret_list) {
-                        System.out.println("ret " + ret.getId());
-                    }
-                }
-                System.out.println("----------------");
-
-            }
-            for (int i = 1; i < current.configuracao_atual.length; i++) {
-                Node node = new Node(current);
-                if (node.pontos[i] != null) {
-                    if (node.pontos[i].ret_list.size() == 0) {
-                        node.configuracao_atual[i] = -2;
-                    } else if (node.configuracao_atual[i] != -1) {
-                        node.configuracao_atual[i] = -1;
-                        node.ord.add(i);
-                        if (map.get(node) == null) {
-                            for (Ret ret : node.pontos[i].ret_list) {
-                                decrease_ponto_ret(ret, node, node.pontos[i]);
-
-                            }
-                            node.pontos[i].ret_list.clear();
-                            list.add(node);
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-
     public static int teste(Node node) {
         int aux = 0;
         for (Ponto p : node.pontos) {
@@ -135,7 +90,7 @@ public class Gerador {
         int num_ret = 0;
         int cur_ponto_id = 0;
         try {
-            File myObj = new File("C:/Users/marco/Documents/NetBeansProjects/Gerador/src/main/java/com/mycompany/gerador/input.txt");
+            File myObj = new File("C:/Users/pedro/Documents/NetBeansProjects/IA_APT/src/main/java/com/mycompany/gerador/input.txt");
             Scanner myReader = new Scanner(myObj);
             num_ret = myReader.nextInt();
             retangulos = new Ret[num_ret + 1];
@@ -183,7 +138,13 @@ public class Gerador {
         System.out.println();
         //System.out.print(decrease_key(ponto_quant_ret, cur_ponto_id, retangulos, pontos));
         Node root = new Node(ponto_quant_ret, pontos);
-        BFS(root);
+        //BFS
+        //BFS.BFS(root);
+        //DFS
+        //DFS.DFS(root);
+        //IDS
+        IDS.startIDS(root);
+        
     }
 
 }
