@@ -89,7 +89,7 @@ public class Gerador {
         
         int[] ret_quant_ponto = new int[num_ret + 1];
         for(int i = 1; i <= num_ret; i++){
-            ret_quant_ponto[i] = retangulos[i].pontos_guardados;
+            ret_quant_ponto[i] = retangulos[i].pontos_list.size() - retangulos[i].pontos_guardados;
         }
         System.out.println();
         // Greedy 1 = (orientada por vértices)  colocar um guarda no vértice que é partilhado por mais retângulos ainda não cobertos

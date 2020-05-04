@@ -5,6 +5,9 @@
  */
 package com.mycompany.gerador;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  *
  * @author pedro
@@ -30,17 +33,30 @@ public class Greedy3 {
                     Ponto ponto_candidato = pontos[ponto_id];
                     int tamanho = ponto_candidato.ret_list.size() - ponto_candidato.ret_guardados;
                     if(tamanho > retangulos_guardados_ponto){
-                        tamanho = retangulos_guardados_ponto;
+                        retangulos_guardados_ponto = tamanho;
                         ponto_escolhido = ponto_candidato;
                         vert_incidentes = 0;
+                        boolean[] ponto_check = new boolean[pontos.length];
+                        
                         for(Ret retangulo : ponto_escolhido.ret_list){
-                            vert_incidentes += retangulo.pontos_list.size() - retangulo.pontos_guardados;
+                            for(int ponto_individual: retangulo.pontos_list){
+                                if(!ponto_check[ponto_individual]){
+                                    vert_incidentes ++;
+                                    ponto_check[ponto_individual] = true;
+                                }
+                            }
                         }
                     } else if(tamanho == retangulos_guardados_ponto){
                         int vert_incidentes_comp = 0;
+                        boolean[] ponto_check = new boolean[pontos.length];
                         for(Ret retangulo : ponto_candidato.ret_list){
-                            vert_incidentes_comp += retangulo.pontos_list.size() - retangulo.pontos_guardados;
-                        }
+                            for(int ponto_individual: retangulo.pontos_list){
+                                if(!ponto_check[ponto_individual]){
+                                    vert_incidentes_comp ++;
+                                    ponto_check[ponto_individual] = true;
+                                }
+                            }
+                        } 
                         if(vert_incidentes_comp > vert_incidentes)
                             ponto_escolhido = ponto_candidato;
                     }

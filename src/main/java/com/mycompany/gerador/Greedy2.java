@@ -29,7 +29,7 @@ public class Greedy2 {
                     Ponto ponto_candidato = pontos[ponto_id];
                     int tamanho = ponto_candidato.ret_list.size() - ponto_candidato.ret_guardados;
                     if(tamanho > retangulos_guardados_ponto){
-                        tamanho = retangulos_guardados_ponto;
+                        retangulos_guardados_ponto = tamanho;
                         ponto_escolhido = ponto_candidato;
                     }
                 }
