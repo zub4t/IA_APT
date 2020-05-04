@@ -23,11 +23,24 @@ public class Ponto implements Comparable<Ponto> {
     int x;
     int y;
     public List<Ret> ret_list = new ArrayList<>();
-    public void setId(int id){
+
+    public void setId(int id) {
         this.id = id;
     }
+
     public void addRet(Ret ret) {
         ret_list.add(ret);
+    }
+
+    public Ponto(Ponto p) {
+        this.id = p.id;
+        this.x = p.x;
+        this.y = p.y;
+
+        for (Ret ret : p.ret_list) {
+            this.ret_list.add(new Ret(ret));
+        }
+
     }
 
     @Override
@@ -38,8 +51,8 @@ public class Ponto implements Comparable<Ponto> {
     @Override
     public int compareTo(Ponto o) {
         int aux = 0;
-        if(o.x == this.x){
-            if(o.y == this.y){
+        if (o.x == this.x) {
+            if (o.y == this.y) {
                 return aux;
             } else {
                 return o.y - this.y;

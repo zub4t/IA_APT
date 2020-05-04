@@ -21,6 +21,13 @@ public class Ret implements Comparable<Ret> {
         this.id = id;
     }
 
+    public Ret(Ret ret) {
+        this.id = ret.id;
+        for (Integer i : ret.pontos_list) {
+            this.pontos_list.add(i);
+        }
+    }
+
     public void addPonto(int ponto_id) {
         pontos_list.add(ponto_id);
     }
@@ -42,6 +49,31 @@ public class Ret implements Comparable<Ret> {
     public int compareTo(Ret o) {
         return o.id - this.id;
 
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Ret other = (Ret) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return true;
     }
 
 }
