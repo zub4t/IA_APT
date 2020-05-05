@@ -31,7 +31,9 @@ public class Gerador {
     public static void printPontoToRet(Ponto[] pontos, Ret[] retangulos, int nr_pontos) {
         System.out.println("Pontos para retangulos:");
         for (int i = 1; i <= nr_pontos; i++) {
+
             System.out.println("Ponto com x - " + pontos[i].x + " ; y - " + pontos[i].y + " id =" + i);
+
             for (Ret retangulo : pontos[i].ret_list) {
                 System.out.println("Retangulo com id " + retangulo.getId());
             }
@@ -144,6 +146,7 @@ public class Gerador {
         }
         System.out.println();
 
+
         //System.out.print(decrease_key(ponto_quant_ret, cur_ponto_id, retangulos, pontos));
         Node root = new Node(ponto_quant_ret, pontos);
         //BFS
@@ -153,6 +156,15 @@ public class Gerador {
         //IDS
         IDS.startIDS(root);
         
+
+        ponto_quant_ret[2] = -1;
+        ponto_quant_ret[12] = -1;
+        // Greedy 1 = (orientada por vértices)  colocar um guarda no vértice que é partilhado por mais retângulos ainda não cobertos
+        System.out.println("Greedy 1 = " + Greedy1.decrease_key(ponto_quant_ret, cur_ponto_id, retangulos, pontos));
+         //Greedy 2 = (orientada por retângulos) escolher o retângulo ainda não coberto que tenha menos vértices incidentes e colocar um guarda num desses vértices que seja partilhado por mais retângulos ainda não cobertos
+        //System.out.println("Greedy 2 = " + Greedy2.increase_key(ret_quant_ponto, num_ret, retangulos, pontos));
+        // Greedy 3 = (orientada por retângulos) variante de 2. em que, em caso de igualdade entre vértices, opta pelo que cobre retângulos que globalmente tenham mais vértices incidentes
+        //System.out.println("Greedy 3 = " + Greedy3.increase_key(ret_quant_ponto, num_ret, retangulos, pontos));
 
     }
 
