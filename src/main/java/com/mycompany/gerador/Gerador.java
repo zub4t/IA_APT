@@ -85,6 +85,8 @@ public class Gerador {
         }
     }
 
+
+
     public static void main(String[] args) {
 
         int num_ret = 0;
@@ -135,7 +137,13 @@ public class Gerador {
             ponto_quant_ret[i] = pontos[i].ret_list.size();
             System.out.print(ponto_quant_ret[i] + " ");
         }
+        
+        int[] ret_quant_ponto = new int[num_ret + 1];
+        for(int i = 1; i <= num_ret; i++){
+            ret_quant_ponto[i] = retangulos[i].pontos_list.size() - retangulos[i].pontos_guardados;
+        }
         System.out.println();
+
         //System.out.print(decrease_key(ponto_quant_ret, cur_ponto_id, retangulos, pontos));
         Node root = new Node(ponto_quant_ret, pontos);
         //BFS
@@ -145,6 +153,7 @@ public class Gerador {
         //IDS
         IDS.startIDS(root);
         
+
     }
 
 }

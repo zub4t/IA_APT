@@ -22,6 +22,8 @@ public class Ponto implements Comparable<Ponto> {
     int id;
     int x;
     int y;
+    int ret_guardados = 0;
+    boolean guardado = false;
     public List<Ret> ret_list = new ArrayList<>();
 
     public void setId(int id) {
@@ -31,6 +33,7 @@ public class Ponto implements Comparable<Ponto> {
     public void addRet(Ret ret) {
         ret_list.add(ret);
     }
+    
 
     public Ponto(Ponto p) {
         this.id = p.id;
@@ -60,6 +63,24 @@ public class Ponto implements Comparable<Ponto> {
         } else {
             return o.x - this.x;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Ponto other = (Ponto) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return true;
     }
 
 }
