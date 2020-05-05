@@ -18,6 +18,8 @@ public class Node implements Comparable<Node> {
 
     public Ponto[] pontos;
     public int[] configuracao_atual;
+    public int funcao_g;
+    public int funcao_h;
     public List<Node> ligacoes = new ArrayList<>();
     public Node pai;
     public Queue<Integer> ord = new LinkedList<>();

@@ -154,13 +154,12 @@ public class Gerador {
         //DFS
         //DFS.DFS(root);
         //IDS
-        IDS.startIDS(root);
-        
-
-        ponto_quant_ret[2] = -1;
-        ponto_quant_ret[12] = -1;
+        //IDS.startIDS(root);
+        //A*
+        Astar.Astar(root, retangulos, pontos);
+        //ponto_quant_ret[2] = -1;
         // Greedy 1 = (orientada por vértices)  colocar um guarda no vértice que é partilhado por mais retângulos ainda não cobertos
-        System.out.println("Greedy 1 = " + Greedy1.decrease_key(ponto_quant_ret, cur_ponto_id, retangulos, pontos));
+        //System.out.println("Greedy 1 = " + Greedy1.decrease_key(ponto_quant_ret, cur_ponto_id, retangulos, pontos));
          //Greedy 2 = (orientada por retângulos) escolher o retângulo ainda não coberto que tenha menos vértices incidentes e colocar um guarda num desses vértices que seja partilhado por mais retângulos ainda não cobertos
         //System.out.println("Greedy 2 = " + Greedy2.increase_key(ret_quant_ponto, num_ret, retangulos, pontos));
         // Greedy 3 = (orientada por retângulos) variante de 2. em que, em caso de igualdade entre vértices, opta pelo que cobre retângulos que globalmente tenham mais vértices incidentes

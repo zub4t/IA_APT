@@ -14,16 +14,16 @@ public class Greedy1 {
     public static int decrease_key(int[] ponto_quant_ret, int size, Ret[] retangulos, Ponto[] pontos) {
         int guardas = 0;
         for (int i = 1; i < ponto_quant_ret.length; i++) {
-            if (ponto_quant_ret[i] == -1) { 
+            if (ponto_quant_ret[i] == -1) {
                 for (Ret retangulo : pontos[i].ret_list) {
                     for (int ponto_id : retangulo.pontos_list) {
                         if (ponto_quant_ret[ponto_id] != -1) {
-                            if(pontos[ponto_id].ret_list.contains(retangulo)){
+                            if (pontos[ponto_id].ret_list.contains(retangulo)) {
                                 pontos[ponto_id].ret_list.remove(retangulo);
                                 ponto_quant_ret[ponto_id]--;
                             }
-                        }   
-                    }
+                        }
+                    }3
                     retangulo.pontos_list.remove((Integer) i);
                 }
                 pontos[i].ret_list.clear();
@@ -46,8 +46,13 @@ public class Greedy1 {
                 for (Ret retangulo : pontos[ponto_candidato].ret_list) {
                     retangulo.pontos_list.remove((Integer) ponto_candidato);
                     for (int ponto_id : retangulo.pontos_list) {
-                        pontos[ponto_id].ret_list.remove(retangulo);
-                        heap.increaseKey(ponto_id, pontos[ponto_id].ret_list.size());
+                        if (pontos[ponto_id] != null) {
+                            pontos[ponto_id].ret_list.remove(retangulo);
+                            if(pontos[ponto_id].x == 1 && pontos[ponto_id].y == 6)
+                                System.out.println();
+                            heap.increaseKey(ponto_id, pontos[ponto_id].ret_list.size());
+                        }
+
                     }
                 }
             }
