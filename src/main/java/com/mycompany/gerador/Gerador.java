@@ -94,7 +94,7 @@ public class Gerador {
         int cur_ponto_id;
         long startTime = System.nanoTime();
         try {
-            File myObj = new File("C:/Users/marco/Documents/NetBeansProjects/Gerador/src/main/java/com/mycompany/gerador/input.txt");
+            File myObj = new File("C:/Users/pedro/Documents/NetBeansProjects/IA_APT/src/main/java/com/mycompany/gerador/input.txt");
             Scanner myReader = new Scanner(myObj);
             int numero_instancias = myReader.nextInt();
 
@@ -134,9 +134,9 @@ public class Gerador {
                         retangulos[id_ret] = retangulo;
                     }
 
-                    //printRetToPonto(retangulos, pontos, num_ret);
+                    printRetToPonto(retangulos, pontos, num_ret);
                     System.out.println();
-                    //printPontoToRet(pontos, retangulos, cur_ponto_id - 1);
+                    printPontoToRet(pontos, retangulos, cur_ponto_id - 1);
                     System.out.println();
                     int[] ponto_quant_ret = new int[cur_ponto_id];
                     for (int i = 1; i <= cur_ponto_id - 1; i++) {
@@ -155,13 +155,17 @@ public class Gerador {
                     //BFS
                    // BFS.BFS(root);
                     //DFS
-                   DFS.DFS(root);
+                   //DFS.DFS(root);
                     //IDS
                     //IDS.startIDS(root);
                     //A*
                     //Astar.Astar(root, retangulos, pontos);
                     //Branch and bound
                     //Node BB = BranchBound.branch_bound(root, retangulos, pontos);
+                    //ILS NORMAL
+                    //ILS.ILS_deterministico(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
+                    //ILS RANDOMs
+                    ILS.ILS_random(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
                     /*for(int ponto_id : BB.ord){
                         Ponto ponto = pontos[ponto_id];
                         System.out.println("Ponto com id " + ponto.id + " x - " + ponto.x + " y - " + ponto.y);

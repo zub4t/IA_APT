@@ -58,6 +58,17 @@ public class Heapmax {
         return vertv;
     }
 
+    void decreaseKey(int vertv, int newkey) {
+
+        int i = pos_a[vertv];
+        a[i].vertkey = newkey;
+
+        while (i > 1 && compare(i, parent(i)) < 0) {
+            swap(i, parent(i));
+            i = parent(i);
+        }
+    }
+
     void increaseKey(int vertv, int newkey) {
 
         int i = pos_a[vertv];
@@ -145,6 +156,12 @@ public class Heapmax {
             heapify(largest);
         }
 
+    }
+
+    public void fixHeap() {
+        for (int i = this.size; i > 0; i--) {
+            this.heapify(i);
+        }
     }
 
     private void swap(int i, int j) {
