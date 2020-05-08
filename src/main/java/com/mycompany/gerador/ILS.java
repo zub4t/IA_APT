@@ -6,7 +6,6 @@
 package com.mycompany.gerador;
 
 import static com.mycompany.gerador.Gerador.decrease_ponto_ret;
-import static com.mycompany.gerador.Gerador.pontos;
 import static com.mycompany.gerador.Gerador.teste;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +16,8 @@ import java.util.TreeMap;
  *
  * @author pedro
  */
-public class DFS {
-    public static void DFS(Node root) {
+public class ILS {
+        public static void ILS(Node root) {
         List<Node> list = new ArrayList<>();
         Map<Node, Boolean> map = new TreeMap<>();
         list.add(root);

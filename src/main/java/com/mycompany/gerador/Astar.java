@@ -41,6 +41,7 @@ public class Astar {
             }
             Node current = list.remove(0);
             if (teste(current) == 0) {
+                /*
                 System.out.println("----------------");
                 System.out.println("nova solução");
                 for (int i : current.ord) {
@@ -50,6 +51,7 @@ public class Astar {
                     }
                 }
                 System.out.println("----------------");
+*/
                 break;
             }
             for (int i = 1; i < current.configuracao_atual.length; i++) {

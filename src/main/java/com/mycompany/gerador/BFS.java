@@ -34,7 +34,7 @@ public class BFS {
                     }
                 }
                 System.out.println("----------------");
-
+                break;
             }
             for (int i = 1; i < current.configuracao_atual.length; i++) {
                 Node node = new Node(current);
