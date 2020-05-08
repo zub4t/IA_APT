@@ -5,9 +5,12 @@
  */
 package com.mycompany.gerador;
 
+import static com.mycompany.gerador.Gerador.decrease_ponto_ret;
 import java.util.ArrayList;
+import static java.util.Collections.list;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -20,7 +23,7 @@ public class Node implements Comparable<Node> {
     public int[] configuracao_atual;
     public int funcao_g;
     public int funcao_h;
-    public List<Node> ligacoes = new ArrayList<>();
+    public List<Node> filhos = new ArrayList<>();
     public Node pai;
     public Queue<Integer> ord = new LinkedList<>();
     public int altura = 0;
@@ -89,9 +92,7 @@ public class Node implements Comparable<Node> {
             this.configuracao_atual[i] = v;
             i++;
         }
-        for (Node node : n.ligacoes) {
-            this.ligacoes.add(node);
-        }
+
         for (Integer v : n.ord) {
             this.ord.add(v);
         }
@@ -108,4 +109,30 @@ public class Node implements Comparable<Node> {
         }
         return 0;
     }
+
+    public List<Node> gerarFilhos(Map<Node, Boolean> map) {
+        for (int i = 1; i < this.configuracao_atual.length; i++) {
+            Node node = new Node(this);
+            if (node.pontos[i] != null) {
+                if (node.pontos[i].ret_list.size() == 0) {
+                    node.configuracao_atual[i] = -2;
+                } else if (node.configuracao_atual[i] != -1) {
+                    node.configuracao_atual[i] = -1;
+                    node.ord.add(i);
+                    if (map.get(node) == null) {
+                        for (Ret ret : node.pontos[i].ret_list) {
+                            decrease_ponto_ret(ret, node, node.pontos[i]);
+
+                        }
+                        node.pontos[i].ret_list.clear();
+                        filhos.add(node);
+                        map.put(node, Boolean.TRUE);
+                    }
+
+                }
+            }
+        }
+        return filhos;
+    }
+
 }

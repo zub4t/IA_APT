@@ -18,6 +18,7 @@ import java.util.TreeMap;
  * @author pedro
  */
 public class DFS {
+
     public static void DFS(Node root) {
         List<Node> list = new ArrayList<>();
         Map<Node, Boolean> map = new TreeMap<>();
@@ -25,7 +26,7 @@ public class DFS {
         while (!list.isEmpty()) {
             Node current = list.remove(list.size() - 1);
             if (teste(current) == 0) {
-                /*
+
                 System.out.println("----------------");
                 System.out.println("nova solução");
                 for (int i : current.ord) {
@@ -35,29 +36,12 @@ public class DFS {
                     }
                 }
                 System.out.println("----------------");
-                */
+
                 break;
             }
-            for (int i = 1; i < current.configuracao_atual.length; i++) {
-                Node node = new Node(current);
-                if (node.pontos[i] != null) {
-                    if (node.pontos[i].ret_list.size() == 0) {
-                        node.configuracao_atual[i] = -2;
-                    } else if (node.configuracao_atual[i] != -1) {
-                        node.configuracao_atual[i] = -1;
-                        node.ord.add(i);
-                        if (map.get(node) == null) {
-                            for (Ret ret : node.pontos[i].ret_list) {
-                                decrease_ponto_ret(ret, node, node.pontos[i]);
-
-                            }
-                            node.pontos[i].ret_list.clear();
-                            list.add(node);
-                            map.put(node, Boolean.TRUE);
-                        }
-
-                    }
-                }
+            List<Node> aux_list = current.gerarFilhos(map);
+            for (Node n : aux_list) {
+                list.add(list.size(), n);
             }
         }
     }

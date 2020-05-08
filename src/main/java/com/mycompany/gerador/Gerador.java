@@ -94,7 +94,7 @@ public class Gerador {
         int cur_ponto_id;
         long startTime = System.nanoTime();
         try {
-            File myObj = new File("C:/Users/pedro/Documents/NetBeansProjects/IA_APT/src/main/java/com/mycompany/gerador/input.txt");
+            File myObj = new File("C:/Users/marco/Documents/NetBeansProjects/Gerador/src/main/java/com/mycompany/gerador/input.txt");
             Scanner myReader = new Scanner(myObj);
             int numero_instancias = myReader.nextInt();
 
@@ -153,9 +153,9 @@ public class Gerador {
                     //System.out.print(decrease_key(ponto_quant_ret, cur_ponto_id, retangulos, pontos));
                     Node root = new Node(ponto_quant_ret, pontos);
                     //BFS
-                    BFS.BFS(root);
+                   // BFS.BFS(root);
                     //DFS
-                    //DFS.DFS(root);
+                   DFS.DFS(root);
                     //IDS
                     //IDS.startIDS(root);
                     //A*
