@@ -24,13 +24,14 @@ public class Formiga implements Runnable {
 
     private static float[][] prob_feromonios = new float[200][200];
     private Map<Integer, Float> mapa_probabilidade = new TreeMap<>();
-    private Set<Float> set_probabilidade = new TreeSet<>();
     private int id;
     private List<Integer> pontos_escolhidos = new ArrayList<>();
     private boolean on_anthill;
     private Node node;
     private Ponto[] pontos;
     private Ret[] retangulos;
+    Set<Integer> set_ret = new TreeSet<>();
+    private List<Integer> arr_random = new ArrayList<>();
 
     public Formiga(int id, Ponto[] pontos, Ret[] retangulos, Node node) {
         this.id = id;
@@ -38,7 +39,6 @@ public class Formiga implements Runnable {
         this.retangulos = retangulos;
         this.node = node;
         this.on_anthill = false;
-        this.startProbabilites();
     }
 
     public int maxParaFormigas() {
@@ -52,13 +52,31 @@ public class Formiga implements Runnable {
         return total;
     }
 
+    public int maxParaFormigasRoot() {
+        int total = 0;
+        for (int i = 1; i < node.pontos.length; i++) {
+            if (pontos[i] == null) {
+                break;
+            }
+            total += node.pontos[i].ret_list.size();
+        }
+        return total;
+    }
+
+    public void startRootProbabilites() {
+        mapa_probabilidade.clear();
+
+        float max = maxParaFormigasRoot();
+        for (int i = 1; i < node.configuracao_atual.length; i++) {
+            this.mapa_probabilidade.put(i, node.pontos[i].ret_list.size() / max);
+        }
+    }
+
     public void startProbabilites() {
         mapa_probabilidade.clear();
-        set_probabilidade.clear();
         float max = maxParaFormigas();
         for (int i = 1; i < node.configuracao_atual.length; i++) {
             this.mapa_probabilidade.put(i, pontos[i].ret_list.size() / max);
-            this.set_probabilidade.add(pontos[i].ret_list.size() / max);
         }
     }
 
@@ -86,32 +104,43 @@ public class Formiga implements Runnable {
         this.on_anthill = on_anthill;
     }
 
-    private int pontoIdEscolha() {
-        List<Integer> numeros = new ArrayList<>();
-        List<Float> set_probabilidade_lista = new ArrayList<>(set_probabilidade);
-        for (int i = 1; i <= this.mapa_probabilidade.size(); i++) {
-            float probabilidade = this.mapa_probabilidade.get((Integer) i);
-            int posicao = 0;
-            if (probabilidade != 0) {
-                posicao = set_probabilidade_lista.indexOf(probabilidade) + 1;
-            }
+    private Ponto[] createCopyPontos() {
+        Ponto pontos[] = new Ponto[this.node.pontos.length];
+        int ponto_id = 1;
+        for (Ponto p : node.pontos) {
+            if (p != null) {
 
-            for (int j = 1; j <= posicao; j++) {
-                numeros.add(i);
+                pontos[ponto_id] = new Ponto(p);
+                ponto_id++;
             }
         }
+        return pontos;
+    }
+
+    private int pontoIdEscolha() {
+        arr_random.clear();
+        for (int i = 1; i <= this.mapa_probabilidade.size(); i++) {
+            int count = (int) Math.ceil(this.mapa_probabilidade.get((Integer) i) / 0.0001);
+            for (int j = 0; j < count; j++) {
+                arr_random.add(i);
+            }
+
+        }
         Random rand = new Random();
-        return numeros.get(rand.nextInt(numeros.size()));
+        return arr_random.get(rand.nextInt(10000));
+
     }
 
     private void verificarCaminho() {
-        Set<Integer> set_ret = new TreeSet<>();
+        set_ret.clear();
         for (int ponto_id : pontos_escolhidos) {
             for (Ret retangulo : node.pontos[ponto_id].ret_list) {
                 set_ret.add(retangulo.getId());
             }
         }
+
         if (set_ret.size() == retangulos.length - 1) {
+
             this.on_anthill = true;
             return;
         }
@@ -131,67 +160,68 @@ public class Formiga implements Runnable {
         pontos_escolhidos.add(id_escolhido);
     }
 
-    private void atualizarProbabilidades() {
-        startProbabilites();
-    }
-    
-    private int contarProbalidadesDiferenteZero(){
+    private int contarProbalidadesDiferenteZero() {
         int total = 0;
-        for(int i = 1; i <= mapa_probabilidade.size(); i++)
-            if(mapa_probabilidade.get((Integer)i) != 0)
+        for (int i = 1; i <= mapa_probabilidade.size(); i++) {
+            if (mapa_probabilidade.get((Integer) i) != 0) {
                 total++;
+            }
+        }
         return total;
     }
 
-    @Override
-    public void run() {
+    private Map<Integer, Float> copyMap() {
         Map<Integer, Float> mapa_probabilidade_copia = new TreeMap<>();
         for (int i = 1; i <= mapa_probabilidade.size(); i++) {
             mapa_probabilidade_copia.put(i, mapa_probabilidade.get((Integer) i));
         }
-        Map<Integer, Float> mapa_probabilidade_copia2 = new TreeMap<>();
-        for (int i = 1; i <= mapa_probabilidade.size(); i++) {
-            mapa_probabilidade_copia2.put(i, mapa_probabilidade.get((Integer) i));
-        }
-        for (int k = 1; k <= 2000; k++) {
+        return mapa_probabilidade_copia;
+    }
+
+    @Override
+    public void run() {
+
+        for (int k = 1; k <= 2000000; k++) {
             this.on_anthill = false;
             pontos_escolhidos.clear();
             int id_escolhido_passado = 0;
-            for (int i = 1; i <= mapa_probabilidade.size(); i++) {
-                mapa_probabilidade.put(i, mapa_probabilidade_copia.get((Integer) i));
-            }
+            startRootProbabilites();
+            this.pontos = createCopyPontos();
             while (!this.on_anthill) {
+                // att do feromonio por cada ponto
+                Map<Integer, Float> map_copy = copyMap();
                 for (int i = 1; i <= mapa_probabilidade.size(); i++) {
-                    mapa_probabilidade_copia2.put(i, mapa_probabilidade.get((Integer) i));
-                }
-                for (int i = 1; i <= mapa_probabilidade.size(); i++) {
-                    if (Formiga.prob_feromonios[id_escolhido_passado][i] != 0) {
+                    if (Formiga.prob_feromonios[id_escolhido_passado][i] != 0 && mapa_probabilidade.get((Integer) i) > 0) {
                         float aux = mapa_probabilidade.get((Integer) i) + Formiga.prob_feromonios[id_escolhido_passado][i];
                         mapa_probabilidade.put(i, aux);
-                        for(int j = 1; j <= mapa_probabilidade_copia.size(); j++){
-                            if(i != j){
+                        for (int j = 1; j <= mapa_probabilidade.size(); j++) {
+                            if (i != j && mapa_probabilidade.get((Integer) j) > 0) {
                                 float aux2 = mapa_probabilidade.get((Integer) j) - (Formiga.prob_feromonios[id_escolhido_passado][i] / (contarProbalidadesDiferenteZero() - 1));
                                 mapa_probabilidade.put(j, aux2);
                             }
                         }
                     }
                 }
-                for (int i = 1; i <= mapa_probabilidade.size(); i++) {
-                    mapa_probabilidade.put(i, mapa_probabilidade_copia2.get((Integer) i));
-                }
                 int id_escolhido = pontoIdEscolha();
+                mapa_probabilidade = map_copy;
                 fazerCaminho(id_escolhido);
-                atualizarProbabilidades();
                 verificarCaminho();
+                startProbabilites();
                 id_escolhido_passado = id_escolhido;
             }
             for (int i = 1; i < pontos_escolhidos.size(); i++) {
-                Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)] += 0.01;
+                Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)] += 0.5;
             }
-            for (int i = 1; i < pontos_escolhidos.size(); i++) {
+            for (int i = 0; i < pontos_escolhidos.size(); i++) {
                 System.out.print(pontos_escolhidos.get(i) + " ");
             }
-            System.out.println();
+            System.out.print("------>" + set_ret.size() + " ------ >");
+
+            if (k == 200000) {
+                System.out.print("");
+            }
+            System.out.println(" " + set_ret.toString());
+
         }
 
     }
