@@ -5,6 +5,7 @@
  */
 package com.mycompany.gerador;
 
+import colonia_formigas.Formiga;
 import java.io.File;
 import java.util.*;
 import java.util.Map.Entry;
@@ -152,10 +153,24 @@ public class Gerador {
 
                     //System.out.print(decrease_key(ponto_quant_ret, cur_ponto_id, retangulos, pontos));
                     Node root = new Node(ponto_quant_ret, pontos);
+                    //Formiga
+                    Ret[] retangulos_copy = new Ret[retangulos.length];
+                    for (int j = 1; j < retangulos.length; j++) {
+                        retangulos_copy[j] = new Ret(retangulos[j]);
+                    }
+                    Ponto[] pontos_copy = new Ponto[pontos.length];
+                    for (int j = 1; j < pontos.length; j++) {
+                        if (pontos[j] == null) {
+                            break;
+                        }
+                        pontos_copy[j] = new Ponto(pontos[j]);
+                    }
+                    Formiga formiga = new Formiga(1, pontos_copy, retangulos_copy,root);
+                    formiga.run();
                     //BFS
-                   // BFS.BFS(root);
+                    // BFS.BFS(root);
                     //DFS
-                   //DFS.DFS(root);
+                    //DFS.DFS(root);
                     //IDS
                     //IDS.startIDS(root);
                     //A*
@@ -165,7 +180,7 @@ public class Gerador {
                     //ILS NORMAL
                     //ILS.ILS_deterministico(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
                     //ILS RANDOMs
-                    ILS.ILS_random(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
+                    //ILS.ILS_random(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
                     /*for(int ponto_id : BB.ord){
                         Ponto ponto = pontos[ponto_id];
                         System.out.println("Ponto com id " + ponto.id + " x - " + ponto.x + " y - " + ponto.y);
@@ -179,16 +194,16 @@ public class Gerador {
                     //System.out.println("Greedy 2 = " + Greedy2.increase_key(ret_quant_ponto, num_ret, retangulos, pontos));
                     // Greedy 3 = (orientada por retângulos) variante de 2. em que, em caso de igualdade entre vértices, opta pelo que cobre retângulos que globalmente tenham mais vértices incidentes
                     //System.out.println("Greedy 3 = " + Greedy3.increase_key(ret_quant_ponto, num_ret, retangulos, pontos));
-                
+
                 }
             }
         } catch (Exception e) {
             System.out.println("An error occurred." + e);
             e.printStackTrace();
         }
-        long endTime   = System.nanoTime();
+        long endTime = System.nanoTime();
         long totalTime = endTime - startTime;
-        System.out.println( totalTime / 1000000000.0);
+        System.out.println(totalTime / 1000000000.0);
     }
 
 }
