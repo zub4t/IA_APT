@@ -33,28 +33,19 @@ public class Greedy1 {
         while (!heap.isEmpty()) {
             int maior = 0;
             int pos_maior = 0;
-            /*for (int i = 1; i < pontos.length; i++) {
-                if(pontos[i].ret_list.size() > maior ){
-                    maior = pontos[i].ret_list.size();
-                    pos_maior = i;
-                }
-            }
-            heap.heapify(pos_maior);*/
             heap.fixHeap();
             int ponto_candidato = heap.extractMax();
             if (!pontos[ponto_candidato].ret_list.isEmpty()) {
-                /* System.out.println("Ponto guardado = x - " + pontos[ponto_candidato].x + " ; y - " + pontos[ponto_candidato].y);
-                for (Ret retangulo : pontos[ponto_candidato].ret_list) {
-                    System.out.print(retangulo.getId() + " ");
-                }
-                System.out.println(); */
                 guardas++;
                 for (Ret retangulo : pontos[ponto_candidato].ret_list) {
                     retangulo.pontos_list.remove((Integer) ponto_candidato);
                     for (int ponto_id : retangulo.pontos_list) {
                         if (pontos[ponto_id] != null) {
                             pontos[ponto_id].ret_list.remove(retangulo);
-                            heap.increaseKey(ponto_id, pontos[ponto_id].ret_list.size());
+                            if (heap.pos_a[ponto_id] != 0) {
+                                heap.increaseKey(ponto_id, pontos[ponto_id].ret_list.size());
+                            }
+
                         }
 
                     }
@@ -63,8 +54,8 @@ public class Greedy1 {
         }
         return guardas;
     }
-    
-        public static Node decrease_key_com_node(int[] ponto_quant_ret, int size, Ret[] retangulos, Ponto[] pontos) {
+
+    public static Node decrease_key_com_node(int[] ponto_quant_ret, int size, Ret[] retangulos, Ponto[] pontos) {
         int guardas = 0;
         for (int i = 1; i < ponto_quant_ret.length; i++) {
             if (ponto_quant_ret[i] == -1) {
@@ -87,13 +78,8 @@ public class Greedy1 {
         while (!heap.isEmpty()) {
             heap.fixHeap();
             int ponto_candidato = heap.extractMax();
-           
+
             if (!pontos[ponto_candidato].ret_list.isEmpty()) {
-                /*System.out.println("Ponto guardado = x - " + pontos[ponto_candidato].x + " ; y - " + pontos[ponto_candidato].y);
-                for (Ret retangulo : pontos[ponto_candidato].ret_list) {
-                    System.out.print(retangulo.getId() + " ");
-                }
-                System.out.println();*/
                 final_node.configuracao_atual[ponto_candidato] = -1;
                 guardas++;
                 for (Ret retangulo : pontos[ponto_candidato].ret_list) {
@@ -101,8 +87,9 @@ public class Greedy1 {
                     for (int ponto_id : retangulo.pontos_list) {
                         if (pontos[ponto_id] != null) {
                             pontos[ponto_id].ret_list.remove(retangulo);
-                            if(final_node.configuracao_atual[ponto_id] > 0)
+                            if (final_node.configuracao_atual[ponto_id] > 0) {
                                 final_node.configuracao_atual[ponto_id]--;
+                            }
                             heap.increaseKey(ponto_id, pontos[ponto_id].ret_list.size());
                         }
 

@@ -26,17 +26,7 @@ public class DFS {
         while (!list.isEmpty()) {
             Node current = list.remove(list.size() - 1);
             if (teste(current) == 0) {
-
-                System.out.println("----------------");
-                System.out.println("nova solução");
-                for (int i : current.ord) {
-                    System.out.println("guardar ponto de id " + i);
-                    for (Ret ret : pontos[i].ret_list) {
-                        System.out.println("ret " + ret.getId());
-                    }
-                }
-                System.out.println("----------------");
-
+                Util.printSolution(current);
                 break;
             }
             List<Node> aux_list = current.gerarFilhos(map);

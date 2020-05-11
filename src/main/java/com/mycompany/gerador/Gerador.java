@@ -80,10 +80,11 @@ public class Gerador {
     }
 
     public static void decrease_ponto_ret(Ret ret, Node node, Ponto ponto) {
+        
         for (Ponto p : node.pontos) {
             if (p != null && p.compareTo(ponto) != 0) {
                 p.ret_list.remove(ret);
-
+                node.configuracao_atual[p.id] = p.ret_list.size();
             }
 
         }
@@ -94,8 +95,9 @@ public class Gerador {
         int num_ret = 0;
         int cur_ponto_id;
         long startTime = System.nanoTime();
+        Node root = null;
         try {
-            File myObj = new File("C:/Users/marco/Documents/NetBeansProjects/Gerador/src/main/java/com/mycompany/gerador/input.txt");
+            File myObj = new File("C:/Users/pedro/Documents/NetBeansProjects/IA_APT/src/main/java/com/mycompany/gerador/input.txt");
             Scanner myReader = new Scanner(myObj);
             int numero_instancias = myReader.nextInt();
 
@@ -152,7 +154,7 @@ public class Gerador {
                     System.out.println();
 
                     //System.out.print(decrease_key(ponto_quant_ret, cur_ponto_id, retangulos, pontos));
-                    Node root = new Node(ponto_quant_ret, pontos);
+                    root = new Node(ponto_quant_ret, pontos);
                     //Formiga
                     Ret[] retangulos_copy = new Ret[retangulos.length];
                     for (int j = 1; j < retangulos.length; j++) {
@@ -165,16 +167,16 @@ public class Gerador {
                         }
                         pontos_copy[j] = new Ponto(pontos[j]);
                     }
-                    Formiga formiga = new Formiga(1, pontos_copy, retangulos_copy,root);
-                    formiga.run();
+                    //Formiga formiga = new Formiga(1, pontos_copy, retangulos_copy,root);
+                    //formiga.run();
                     //BFS
-                    // BFS.BFS(root);
+                     //BFS.BFS(root);
                     //DFS
                     //DFS.DFS(root);
                     //IDS
                     //IDS.startIDS(root);
                     //A*
-                    //Astar.Astar(root, retangulos, pontos);
+                    
                     //Branch and bound
                     //Node BB = BranchBound.branch_bound(root, retangulos, pontos);
                     //ILS NORMAL
@@ -201,6 +203,7 @@ public class Gerador {
             System.out.println("An error occurred." + e);
             e.printStackTrace();
         }
+        Astar.Astar(root, retangulos, pontos);
         long endTime = System.nanoTime();
         long totalTime = endTime - startTime;
         System.out.println(totalTime / 1000000000.0);

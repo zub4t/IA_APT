@@ -117,17 +117,26 @@ public class Formiga implements Runnable {
         return pontos;
     }
 
-    private int pontoIdEscolha() {
+    private int pontoIdEscolha(boolean first_interation) {
         arr_random.clear();
-        for (int i = 1; i <= this.mapa_probabilidade.size(); i++) {
-            int count = (int) Math.ceil(this.mapa_probabilidade.get((Integer) i) / 0.0001);
-            for (int j = 0; j < count; j++) {
-                arr_random.add(i);
+        if (!first_interation) {
+            for (int i = 1; i <= this.mapa_probabilidade.size(); i++) {
+                int count = (int) Math.ceil(this.mapa_probabilidade.get((Integer) i) / 0.0001);
+                for (int j = 0; j < count * this.pontos[i].ret_list.size(); j++) {
+                    arr_random.add(i);
+                }
             }
-
+        } else {
+            for(int i = 1; i < this.node.pontos.length; i++){
+                if(node.pontos[i] == null)
+                    break;
+                if(node.pontos[i].ret_list.size() == 3)
+                    return i;
+            }
         }
+
         Random rand = new Random();
-        return arr_random.get(rand.nextInt(10000));
+        return arr_random.get(rand.nextInt(arr_random.size()));
 
     }
 
@@ -181,7 +190,8 @@ public class Formiga implements Runnable {
     @Override
     public void run() {
 
-        for (int k = 1; k <= 2000000; k++) {
+        for (int k = 1; k <= 200000; k++) {
+            boolean first_interation = true;
             this.on_anthill = false;
             pontos_escolhidos.clear();
             int id_escolhido_passado = 0;
@@ -194,15 +204,47 @@ public class Formiga implements Runnable {
                     if (Formiga.prob_feromonios[id_escolhido_passado][i] != 0 && mapa_probabilidade.get((Integer) i) > 0) {
                         float aux = mapa_probabilidade.get((Integer) i) + Formiga.prob_feromonios[id_escolhido_passado][i];
                         mapa_probabilidade.put(i, aux);
+                        float total_dever = 0;
                         for (int j = 1; j <= mapa_probabilidade.size(); j++) {
                             if (i != j && mapa_probabilidade.get((Integer) j) > 0) {
                                 float aux2 = mapa_probabilidade.get((Integer) j) - (Formiga.prob_feromonios[id_escolhido_passado][i] / (contarProbalidadesDiferenteZero() - 1));
-                                mapa_probabilidade.put(j, aux2);
+                                if (aux2 > 0) {
+                                    mapa_probabilidade.put(j, aux2);
+                                } else {
+                                    mapa_probabilidade.put(j, 0.0f);
+                                    total_dever -= aux2;
+                                }
                             }
+                        }
+                        float total_prob = 0;
+                        for (int l = 1; l <= mapa_probabilidade.size(); l++) {
+                            total_prob += mapa_probabilidade.get((Integer) l);
+                        }
+                        while (total_dever > 0) {
+                            float total_dever_2 = total_dever;
+                            for (int j = 1; j <= mapa_probabilidade.size(); j++) {
+                                if (i != j && mapa_probabilidade.get((Integer) j) > 0) {
+                                    float aux2 = mapa_probabilidade.get((Integer) j) - (total_dever / (contarProbalidadesDiferenteZero() - 1));
+                                    if (aux2 > 0) {
+                                        mapa_probabilidade.put(j, aux2);
+                                    } else {
+                                        mapa_probabilidade.put(j, 0.0f);
+                                        total_dever_2 += aux2;
+                                    }
+                                }
+                            }
+                            total_dever -= total_dever_2;
+                        }
+                        total_prob = 0;
+                        for (int l = 1; l <= mapa_probabilidade.size(); l++) {
+                            total_prob += mapa_probabilidade.get((Integer) l);
                         }
                     }
                 }
-                int id_escolhido = pontoIdEscolha();
+                int id_escolhido = pontoIdEscolha(first_interation);
+                if (first_interation) {
+                    first_interation = false;
+                }
                 mapa_probabilidade = map_copy;
                 fazerCaminho(id_escolhido);
                 verificarCaminho();
@@ -210,7 +252,9 @@ public class Formiga implements Runnable {
                 id_escolhido_passado = id_escolhido;
             }
             for (int i = 1; i < pontos_escolhidos.size(); i++) {
-                Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)] += 0.5;
+                if (Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)] < 1) {
+                    Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)] += 0.001;
+                }
             }
             for (int i = 0; i < pontos_escolhidos.size(); i++) {
                 System.out.print(pontos_escolhidos.get(i) + " ");

@@ -41,17 +41,7 @@ public class Astar {
             }
             Node current = list.remove(0);
             if (teste(current) == 0) {
-                /*
-                System.out.println("----------------");
-                System.out.println("nova solução");
-                for (int i : current.ord) {
-                    System.out.println("guardar ponto de id " + i);
-                    for (Ret ret : pontos[i].ret_list) {
-                        System.out.println("ret " + ret.getId());
-                    }
-                }
-                System.out.println("----------------");
-*/
+                Util.printSolution(current);
                 break;
             }
             for (int i = 1; i < current.configuracao_atual.length; i++) {

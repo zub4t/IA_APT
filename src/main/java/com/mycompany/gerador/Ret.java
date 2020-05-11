@@ -18,6 +18,7 @@ public class Ret implements Comparable<Ret> {
     private int id;
     boolean guardado = false;
     int pontos_guardados = 0;
+
     public Ret(int id) {
         this.id = id;
     }
@@ -26,6 +27,7 @@ public class Ret implements Comparable<Ret> {
         this.id = ret.id;
         for (Integer i : ret.pontos_list) {
             this.pontos_list.add(i);
+
         }
     }
 

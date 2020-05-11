@@ -33,7 +33,6 @@ public class Ponto implements Comparable<Ponto> {
     public void addRet(Ret ret) {
         ret_list.add(ret);
     }
-    
 
     public Ponto(Ponto p) {
         this.id = p.id;
@@ -42,6 +41,7 @@ public class Ponto implements Comparable<Ponto> {
 
         for (Ret ret : p.ret_list) {
             this.ret_list.add(new Ret(ret));
+
         }
 
     }

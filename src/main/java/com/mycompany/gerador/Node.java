@@ -79,7 +79,11 @@ public class Node implements Comparable<Node> {
         int i = 0;
         for (Ponto p : n.pontos) {
             if (p != null) {
-                pontos[i] = new Ponto(p);
+                try{
+                    pontos[i] = new Ponto(p);
+                }catch(OutOfMemoryError ex){
+                    System.out.print("ol");
+                }
             } else {
                 pontos[i] = null;
             }
@@ -112,7 +116,9 @@ public class Node implements Comparable<Node> {
 
     public List<Node> gerarFilhos(Map<Node, Boolean> map) {
         for (int i = 1; i < this.configuracao_atual.length; i++) {
-            Node node = new Node(this);
+            Node node = null;
+            node = new Node(this);
+            
             if (node.pontos[i] != null) {
                 if (node.pontos[i].ret_list.size() == 0) {
                     node.configuracao_atual[i] = -2;
@@ -125,6 +131,7 @@ public class Node implements Comparable<Node> {
 
                         }
                         node.pontos[i].ret_list.clear();
+                        node.altura = this.altura + 1;
                         filhos.add(node);
                         map.put(node, Boolean.TRUE);
                     }
