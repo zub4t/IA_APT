@@ -47,7 +47,7 @@ public class Greedy1 {
                             }
 
                         }
-
+ d
                     }
                 }
             }
