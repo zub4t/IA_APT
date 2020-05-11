@@ -178,9 +178,9 @@ public class Gerador {
                     //Branch and bound
                     //Node BB = BranchBound.branch_bound(root, retangulos, pontos);
                     //ILS NORMAL
-                    //ILS.ILS_deterministico(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
+                   // Node n = ILS.ILS_deterministico(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
                     //ILS RANDOMs
-                    //ILS.ILS_random(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
+                   // Node nn = ILS.ILS_random(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
                     /*for(int ponto_id : BB.ord){
                         Ponto ponto = pontos[ponto_id];
                         System.out.println("Ponto com id " + ponto.id + " x - " + ponto.x + " y - " + ponto.y);
