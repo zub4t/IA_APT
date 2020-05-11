@@ -56,7 +56,7 @@ public class Greedy1 {
                             pontos[ponto_id].ret_list.remove(retangulo);
                             heap.increaseKey(ponto_id, pontos[ponto_id].ret_list.size());
                         }
-
+ d
                     }
                 }
             }
