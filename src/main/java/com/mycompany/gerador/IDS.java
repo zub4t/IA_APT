@@ -11,6 +11,7 @@ import static com.mycompany.gerador.Gerador.teste;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.TreeMap;
 
 /**
@@ -21,21 +22,21 @@ public class IDS {
 
     public static void startIDS(Node root) {
         int cur_max_height = 0;
+        Map<Node, Boolean> map = new TreeMap<>();
         System.out.println(" altura : " + cur_max_height);
-        while (!IDS(root, cur_max_height)) {
+        while (!IDS(root, cur_max_height, map)) {
             cur_max_height++;
             System.out.println(" altura : " + cur_max_height);
         }
         System.out.println(" altura : " + cur_max_height);
     }
 
-    public static boolean IDS(Node root, int max_height) {
-        List<Node> list = new ArrayList<>();
-        Map<Node, Boolean> map = new TreeMap<>();
+    public static boolean IDS(Node root, int max_height, Map<Node, Boolean> map) {
+        Stack<Node> list = new Stack<>();
         list.add(root);
         while (!list.isEmpty()) {
             Node current = null;
-            current = list.remove(0);
+            current = list.pop();
             /*if (cur_max_height == max_height) {
                 current = list.remove(0);
             } else {
@@ -43,55 +44,23 @@ public class IDS {
                 
             }*/
             if (teste(current) == 0) {
-                /*
-                System.out.println("----------------");
-                System.out.println("nova solução");
-                for (int i : current.ord) {
-                    System.out.println("guardar ponto de id " + i);
-                    for (Ret ret : pontos[i].ret_list) {
-                        System.out.println("ret " + ret.getId());
-                    }
-                }
-                System.out.println("----------------");
-*/
-                while(current != null){
-                    for(int i : current.configuracao_atual)
+                Util.printSolution(current, pontos);
+                while (current != null) {
+                    for (int i : current.configuracao_atual) {
                         System.out.print(" " + i);
+                    }
                     System.out.println();
                     current = current.pai;
                 }
                 return true;
             }
-            if (current.altura != max_height) {
-                boolean add_start = list.size() > 0;
-                for (int i = 1; i < current.configuracao_atual.length; i++) {
-                    Node node = new Node(current);
-                    node.pai = current;
-                    if (node.pontos[i] != null) {
-                        if (node.pontos[i].ret_list.size() == 0) {
-                            node.configuracao_atual[i] = -2;
-                        } else if (node.configuracao_atual[i] != -1) {
-                            node.configuracao_atual[i] = -1;
-                            node.ord.add(i);
-                            if (map.get(node) == null) {
-                                for (Ret ret : node.pontos[i].ret_list) {
-                                    decrease_ponto_ret(ret, node, node.pontos[i]);
-                                }
-                                node.pontos[i].ret_list.clear();
-                                node.altura = node.pai.altura + 1;
-                                //ordem da direita para a esquerda nos filhos se houver pais pendentes na fila
-                                if(add_start){
-                                    list.add(0, node);
-                                } else {
-                                    list.add(node);
-                                }
-                                
-                                map.put(node, Boolean.TRUE);
-                            }
-                        }
-                    }
+            if (current.altura + 1 <= max_height) {
+                List<Node> aux = current.gerarFilhos(map);
+                for (Node node : aux) {
+                    list.add(node);
                 }
-            } 
+            }
+
         }
         return false;
     }

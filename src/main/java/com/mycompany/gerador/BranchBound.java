@@ -33,18 +33,9 @@ public class BranchBound {
             int current_bound = current.contarGuardas();
             boolean meter_filhos = true;
             if (teste(current) == 0) {
-                /*
-                System.out.println("----------------");
-                System.out.println("nova solução");
-                for (int i : current.ord) {
-                    System.out.println("guardar ponto de id " + i);
-                    for (Ret ret : pontos[i].ret_list) {
-                        System.out.println("ret " + ret.getId());
-                    }
-                }
-                System.out.println("----------------");
-                */
+                System.out.println("aqui");
                 if (current_bound < bound) {
+                    
                     bound = current_bound;
                     solution = current;
                 }

@@ -54,7 +54,8 @@ public class Greedy1 {
                     for (int ponto_id : retangulo.pontos_list) {
                         if (pontos[ponto_id] != null) {
                             pontos[ponto_id].ret_list.remove(retangulo);
-                            heap.increaseKey(ponto_id, pontos[ponto_id].ret_list.size());
+                            if(heap.pos_a[ponto_id] != 0)
+                                heap.increaseKey(ponto_id, pontos[ponto_id].ret_list.size());
                         }
  
                     }
@@ -103,7 +104,8 @@ public class Greedy1 {
                             pontos[ponto_id].ret_list.remove(retangulo);
                             if(final_node.configuracao_atual[ponto_id] > 0)
                                 final_node.configuracao_atual[ponto_id]--;
-                            heap.increaseKey(ponto_id, pontos[ponto_id].ret_list.size());
+                            if(heap.pos_a[ponto_id] != 0)
+                                heap.increaseKey(ponto_id, pontos[ponto_id].ret_list.size());
                         }
 
                     }

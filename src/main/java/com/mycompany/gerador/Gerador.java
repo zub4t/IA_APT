@@ -7,8 +7,11 @@ package com.mycompany.gerador;
 
 import colonia_formigas.Formiga;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -83,9 +86,21 @@ public class Gerador {
         for (Ponto p : node.pontos) {
             if (p != null && p.compareTo(ponto) != 0) {
                 p.ret_list.remove(ret);
-
             }
-
+        }
+    }
+    
+    public static void endireitarConfiguracao(Node node, Set<Integer> rets){
+        for(int i = 1; i < node.configuracao_atual.length; i++){
+            int total = 0;
+            if(node.configuracao_atual[i] != -1){
+                for(Ret retangulo : pontos[i].ret_list){
+                    if(!rets.contains(retangulo.getId())){
+                        total++;
+                    }
+                }
+                node.configuracao_atual[i] = total;
+            }
         }
     }
 
@@ -95,7 +110,7 @@ public class Gerador {
         int cur_ponto_id;
         long startTime = System.nanoTime();
         try {
-            File myObj = new File("C:/Users/marco/Documents/NetBeansProjects/Gerador/src/main/java/com/mycompany/gerador/input.txt");
+            File myObj = new File("C:/Users/pedro/Documents/NetBeansProjects/IA_APT2/src/main/java/com/mycompany/gerador/input.txt");
             Scanner myReader = new Scanner(myObj);
             int numero_instancias = myReader.nextInt();
 
@@ -165,22 +180,27 @@ public class Gerador {
                         }
                         pontos_copy[j] = new Ponto(pontos[j]);
                     }
-                    Formiga formiga = new Formiga(1, pontos_copy, retangulos_copy,root);
-                    formiga.run();
+                    //Formiga formiga = new Formiga(1, pontos_copy, retangulos_copy,root);
+                    //formiga.run();
                     //BFS
-                    // BFS.BFS(root);
+                    //BFS.BFS(root, retangulos_copy);
                     //DFS
                     //DFS.DFS(root);
+                    //DFS com restricoes
+                    //DFS.DFS_com_prop_restr(root, pontos, retangulos);
                     //IDS
-                    //IDS.startIDS(root);
+                    IDS.startIDS(root);
                     //A*
                     //Astar.Astar(root, retangulos, pontos);
                     //Branch and bound
                     //Node BB = BranchBound.branch_bound(root, retangulos, pontos);
+                    //Util.printSolution(BB, pontos);
                     //ILS NORMAL
-                   // Node n = ILS.ILS_deterministico(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
+                    //Node n = ILS.ILS_deterministico(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
+                    //Util.printSolutionWithoutOrd(n, pontos);
                     //ILS RANDOMs
-                   // Node nn = ILS.ILS_random(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
+                    //Node nn = ILS.ILS_random(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
+                    //Util.printSolutionWithoutOrd(nn, pontos);
                     /*for(int ponto_id : BB.ord){
                         Ponto ponto = pontos[ponto_id];
                         System.out.println("Ponto com id " + ponto.id + " x - " + ponto.x + " y - " + ponto.y);
@@ -197,9 +217,8 @@ public class Gerador {
 
                 }
             }
-        } catch (Exception e) {
-            System.out.println("An error occurred." + e);
-            e.printStackTrace();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Gerador.class.getName()).log(Level.SEVERE, null, ex);
         }
         long endTime = System.nanoTime();
         long totalTime = endTime - startTime;

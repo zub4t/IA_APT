@@ -11,7 +11,9 @@ import static com.mycompany.gerador.Gerador.teste;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  *
@@ -19,27 +21,19 @@ import java.util.TreeMap;
  */
 public class BFS {
 
-    public static void BFS(Node root) {
+    public static void BFS(Node root, Ret[] rets) {
         List<Node> list = new ArrayList<>();
         Map<Node, Boolean> map = new TreeMap<>();
         list.add(root);
         while (!list.isEmpty()) {
             Node current = list.remove(0);
             if (teste(current) == 0) {
-                System.out.println("----------------");
-                System.out.println("nova solução");
-                for (int i : current.ord) {
-                    System.out.println("guardar ponto de id " + i);
-                    for (Ret ret : pontos[i].ret_list) {
-                        System.out.println("ret " + ret.getId());
-                    }
-                }
-                System.out.println("----------------");
+                Util.printSolution(current, pontos);
                 break;
             }
             List<Node> aux_list = current.gerarFilhos(map);
             for (Node n : aux_list) {
-                list.add(list.size(), n);
+                    list.add(n);
             }
         }
     }

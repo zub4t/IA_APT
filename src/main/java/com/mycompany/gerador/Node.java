@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
@@ -113,22 +115,44 @@ public class Node implements Comparable<Node> {
     public List<Node> gerarFilhos(Map<Node, Boolean> map) {
         for (int i = 1; i < this.configuracao_atual.length; i++) {
             Node node = new Node(this);
+            node.pai = this;
             if (node.pontos[i] != null) {
-                if (node.pontos[i].ret_list.size() == 0) {
-                    node.configuracao_atual[i] = -2;
-                } else if (node.configuracao_atual[i] != -1) {
+                if (!node.pontos[i].ret_list.isEmpty() && node.configuracao_atual[i] != -1) {
                     node.configuracao_atual[i] = -1;
                     node.ord.add(i);
                     if (map.get(node) == null) {
                         for (Ret ret : node.pontos[i].ret_list) {
                             decrease_ponto_ret(ret, node, node.pontos[i]);
-
                         }
                         node.pontos[i].ret_list.clear();
-                        filhos.add(node);
-                        map.put(node, Boolean.TRUE);
+                        node.altura = this.altura + 1;
+                        Set<Integer> retanguloSet = new TreeSet<>();
+                        for (int ponto_id : this.ord) {
+                            if (Gerador.pontos[ponto_id] != null) {
+                                for (Ret retangulo : Gerador.pontos[ponto_id].ret_list) {
+                                    retanguloSet.add(retangulo.getId());
+                                }
+                            }
+                        }
+                        Set<Integer> retanguloNodeSet = new TreeSet<>();
+                        for (int ponto_id : node.ord) {
+                            if (Gerador.pontos[ponto_id] != null) {
+                                for (Ret retangulo : Gerador.pontos[ponto_id].ret_list) {
+                                    retanguloNodeSet.add(retangulo.getId());
+                                }
+                            }
+                        }
+                        Gerador.endireitarConfiguracao(this, retanguloSet);
+                        int n = 0;
+                        for(int j = 1; j < this.configuracao_atual.length; j++){
+                            if(configuracao_atual[j] > n)
+                                n = configuracao_atual[j];
+                        }
+                        if (retanguloNodeSet.size() - retanguloSet.size() >= n) {
+                            filhos.add(node);
+                            map.put(node, Boolean.TRUE);
+                        }
                     }
-
                 }
             }
         }

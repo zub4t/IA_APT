@@ -23,6 +23,18 @@ import java.util.TreeSet;
  */
 public class ILS {
 
+    public static Node nodeSolution;
+
+    public static void fazerTeste(Node node, Node currentSolution, Stack<Node> stack, Map<Node, Boolean> mapa) {
+        if (node != null && mapa.get(node) == null) {
+            mapa.put(node, Boolean.TRUE);
+            if (node != null && ((node.contarGuardas() <= nodeSolution.contarGuardas()))) {
+                nodeSolution = node;
+                stack.push(node);
+            }
+        }
+    }
+
     public static Node ILS_deterministico(int[] ponto_quant_ret, int size, Ret[] retangulos, Ponto[] pontos) {
         Ret[] retangulos_copy = new Ret[retangulos.length];
         for (int j = 1; j < retangulos.length; j++) {
@@ -39,51 +51,38 @@ public class ILS {
         List<Integer> list = new ArrayList<>();
         Stack<Node> stack = new Stack<Node>();
         Map<Node, Boolean> mapa = new TreeMap<>();
+        nodeSolution = currentSolution;
         stack.add(currentSolution);
         //normal
         while (!stack.isEmpty()) {
+
+            list.clear();
             currentSolution = stack.pop();
+            //if(currentSolution.ord.contains(2) && currentSolution.ord.contains(10) && currentSolution.ord.contains(15) && currentSolution.ord.contains(20) && currentSolution.ord.size() == 4)
+            //System.out.println();
             for (int i = 1; i < currentSolution.configuracao_atual.length; i++) {
                 if (currentSolution.configuracao_atual[i] == -1) {
                     list.add(i);
                 }
             }
-            boolean flag = false;
             for (int i = 0; i < list.size(); i++) {
                 int pos = list.get(i);
+                currentSolution.configuracao_atual[pos] = 0;
+                Node testNodeComZero = ILS_heuristic(currentSolution, pontos, retangulos.length - 1);
+                fazerTeste(testNodeComZero, currentSolution, stack, mapa);
+                currentSolution.configuracao_atual[pos] = -1;
                 for (int j = 1; j < currentSolution.configuracao_atual.length; j++) {
                     Node testNode = new Node(currentSolution);
                     testNode.configuracao_atual[pos] = 0;
                     if (testNode.configuracao_atual[j] == 0 && j != pos) {
                         testNode.configuracao_atual[j] = -1;
-                        if (mapa.get(testNode) == null) {
-                            for (int k = 1; k < testNode.configuracao_atual.length; k++) {
-                                //System.out.print(" " + testNode.configuracao_atual[k]);
-                            }
-                            mapa.put(testNode, true);
-                            testNode = ILS_heuristic(testNode, pontos, retangulos.length - 1);
-                            if (testNode == null) {
-                                //System.out.println(" - nao e solucao");
-                            } else {
-                                //System.out.println(" - e solucao");
-                            }
-                            if (testNode != null && testNode.contarGuardas() < currentSolution.contarGuardas()) {
-                                stack.push(testNode);
-                                flag = true;
-                                break;
-                            }
-                            if (testNode != null) {
-                                testNode.configuracao_atual[j] = 0;
-                            }
-                        }
+                        Node testNodeSemZero = ILS_heuristic(testNode, pontos, retangulos.length - 1);
+                        fazerTeste(testNodeSemZero, currentSolution, stack, mapa);
                     }
-                }
-                if (flag) {
-                    break;
                 }
             }
         }
-        return currentSolution;
+        return nodeSolution;
     }
 
     public static Node ILS_random(int[] ponto_quant_ret, int size, Ret[] retangulos, Ponto[] pontos) {
@@ -103,69 +102,59 @@ public class ILS {
         List<Integer> list = new ArrayList<>();
         Stack<Node> stack = new Stack<Node>();
         Map<Node, Boolean> mapa = new TreeMap<>();
+        nodeSolution = currentSolution;
         stack.add(currentSolution);
         //normal
         while (!stack.isEmpty()) {
+
+            list.clear();
             currentSolution = stack.pop();
+            //if(currentSolution.ord.contains(2) && currentSolution.ord.contains(10) && currentSolution.ord.contains(15) && currentSolution.ord.contains(20) && currentSolution.ord.size() == 4)
+            //System.out.println();
             for (int i = 1; i < currentSolution.configuracao_atual.length; i++) {
                 if (currentSolution.configuracao_atual[i] == -1) {
                     list.add(i);
                 }
             }
-            boolean flag = false;
             for (int i = 0; i < list.size(); i++) {
                 int pos = list.get(i);
-                Set<Integer> set_check = new TreeSet<>();
-                while (set_check.size() != currentSolution.configuracao_atual.length - 1) {
+                currentSolution.configuracao_atual[pos] = 0;
+                Node testNodeComZero = ILS_heuristic(currentSolution, pontos, retangulos.length - 1);
+                fazerTeste(testNodeComZero, currentSolution, stack, mapa);
+                currentSolution.configuracao_atual[pos] = -1;
+                Set<Integer> numeros_random = new TreeSet<Integer>();
+                while (numeros_random.size() < currentSolution.configuracao_atual.length - currentSolution.contarGuardas()) {
                     int j = rand.nextInt(currentSolution.configuracao_atual.length - 1) + 1;
-                    if (!set_check.contains(j)) {
+                    if (!numeros_random.contains(j)) {
+                        numeros_random.add(j);
                         Node testNode = new Node(currentSolution);
                         testNode.configuracao_atual[pos] = 0;
                         if (testNode.configuracao_atual[j] == 0 && j != pos) {
                             testNode.configuracao_atual[j] = -1;
-                            if (mapa.get(testNode) == null) {
-                                for (int k = 1; k < testNode.configuracao_atual.length; k++) {
-                                    //System.out.print(" " + testNode.configuracao_atual[k]);
-                                }
-                                mapa.put(testNode, true);
-                                testNode = ILS_heuristic(testNode, pontos, retangulos.length - 1);
-                                if (testNode == null) {
-                                    //System.out.println(" - nao e solucao");
-                                } else {
-                                    //System.out.println(" - e solucao");
-                                }
-                                if (testNode != null && testNode.contarGuardas() < currentSolution.contarGuardas()) {
-                                    stack.push(testNode);
-                                    flag = true;
-                                    break;
-                                }
-                                if (testNode != null) {
-                                    testNode.configuracao_atual[j] = 0;
-                                }
-                            }
+                            Node testNodeSemZero = ILS_heuristic(testNode, pontos, retangulos.length - 1);
+                            fazerTeste(testNodeSemZero, currentSolution, stack, mapa);
                         }
-                        set_check.add(j);
                     }
                 }
-                if (flag) {
-                    break;
-                }
+
             }
         }
-        //random
-        return currentSolution;
+        return nodeSolution;
     }
 
     public static Node ILS_heuristic(Node node, Ponto[] pontos, int num_ret) {
         boolean flag = false;
         Set<Integer> set = new TreeSet<>();
-        for (int i = 1; i < node.configuracao_atual.length; i++) {
-            if (node.configuracao_atual[i] == -1 && !flag) {
+        Node node_final = new Node(node);
+        node_final.ord.clear();
+        for (int i = 1; i < node_final.configuracao_atual.length; i++) {
+            if (node_final.configuracao_atual[i] == -1 && !flag) {
+                node_final.ord.add(i);
                 for (Ret retangulo : pontos[i].ret_list) {
                     set.add(retangulo.getId());
                 }
             } else if (flag) {
-                node.configuracao_atual[i] = 0;
+                node_final.configuracao_atual[i] = 0;
             }
             if (set.size() == num_ret) {
                 flag = true;
@@ -174,6 +163,6 @@ public class ILS {
         if (set.size() != num_ret) {
             return null;
         }
-        return node;
+        return node_final;
     }
 }
