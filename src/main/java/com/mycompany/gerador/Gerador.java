@@ -55,7 +55,7 @@ public class Gerador {
                         }
                         retangulos[id_ret] = retangulo;
                     }
-
+                    
                     System.out.println("Deseja vizualizao a configuração importada  ? 1/0");
                     int conf = teclado.nextInt();
                     if (conf == 1) {
@@ -65,9 +65,9 @@ public class Gerador {
                         System.out.println(conf_res);
                     }
 
-                    int escolhido = 2;
+                    int escolhido = 0;
                     while (escolhido != 13) {
-                        /*System.out.println("Escolha qual  algoritimo quer ver");
+                        System.out.println("Escolha qual  algoritimo quer ver");
                         System.out.println(""
                                 + "1-Colonia de Formigas"
                                 + "\n2-BFS"
@@ -82,7 +82,7 @@ public class Gerador {
                                 + "\n11-ILS_Random"
                                 + "\n12-ILS_Deterministico"
                                 + "\n13-ir para proxima instancia do input");
-                        escolhido = teclado.nextInt();*/
+                        escolhido = teclado.nextInt();
 
                         //array em que cada posição é o ponto id e que por exemplo ponto_quant_ret[2] = quantidade de retangulos que o ponto 2 cobre
                         int ponto_quant_ret[] = Util.makeInstancePonto(cur_ponto_id);
@@ -97,7 +97,7 @@ public class Gerador {
 
                         // Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
                         long heapMaxSize = Runtime.getRuntime().maxMemory();
-                        System.out.println("Tamnho em gigas da heap disponivel:" + heapMaxSize / 1000000000.0);
+                        //System.out.println("Tamnho em gigas da heap disponivel:" + heapMaxSize / 1000000000.0);
 
                         switch (escolhido) {
                             case 1:
@@ -110,13 +110,11 @@ public class Gerador {
                                 //BFS
                                 startTime = System.nanoTime();
                                 BFS.BFS(root, retangulos_copy);
-                                escolhido = 13;
                                 break;
                             case 3:
                                 //DFS
                                 startTime = System.nanoTime();
                                 DFS.DFS(root);
-
                                 break;
                             case 4:
                                 startTime = System.nanoTime();
@@ -132,17 +130,18 @@ public class Gerador {
                                 startTime = System.nanoTime();
                                 // Greedy 3 = (orientada por retângulos) variante de 2. em que, em caso de igualdade entre vértices, opta pelo que cobre retângulos que globalmente tenham mais vértices incidentes
                                 System.out.println("Greedy 3 = " + Greedy3.increase_key(ret_quant_ponto, num_ret, retangulos_copy, pontos_copy));
-
                                 break;
                             case 7:
                                 startTime = System.nanoTime();
                                 Node BB = BranchBound.branch_bound_stack(root, retangulos_copy, pontos_copy);
-                                Util.printSolution(BB, pontos);
+                                System.out.println("Guardas: " + BB.ord.size());
+                                //Util.printSolution(BB, pontos);
                                 break;
                             case 8:
                                 startTime = System.nanoTime();
                                 Node B = BranchBound.branch_bound_queue(root, retangulos_copy, pontos_copy);
-                                Util.printSolution(B, pontos);
+                                System.out.println("Guardas: " + B.ord.size());
+                                //Util.printSolution(B, pontos);
                                 break;
                             case 9:
                                 //A*
@@ -158,14 +157,15 @@ public class Gerador {
                                 //ILS RANDOMs
                                 startTime = System.nanoTime();
                                 Node nn = ILS.ILS_random(root.configuracao_atual, root.configuracao_atual.length, retangulos_copy, pontos_copy);
-                                Util.printSolutionWithoutOrd(nn, pontos);
-
+                                System.out.println("Guardas: " + nn.ord.size());
+                                //Util.printSolutionWithoutOrd(nn, pontos);
                                 break;
                             case 12:
                                 //ILS NORMAL
                                 startTime = System.nanoTime();
                                 Node n = ILS.ILS_deterministico(root.configuracao_atual, root.configuracao_atual.length, retangulos_copy, pontos_copy);
-                                Util.printSolutionWithoutOrd(n, pontos);
+                                System.out.println("Guardas: " + n.ord.size());
+                                //Util.printSolutionWithoutOrd(n, pontos);
                                 break;
                             case 13:
                                 startTime = System.nanoTime();
@@ -173,13 +173,6 @@ public class Gerador {
                                 break;
 
                         }
-
-                        long endTime = System.nanoTime();
-                        long totalTime = endTime - startTime;
-                        System.out.println("tempo total decorrido do algoritimo : " + totalTime / 1000000000.0);
-                        // Get amount of free memory within the heap in bytes. This size will increase // after garbage collection and decrease as new objects are created.
-                        long heapFreeSize = Runtime.getRuntime().freeMemory();
-                        System.out.println("Tamnho em gigas da heap disponivel apos a fim da exucução do algoritimo :" + heapFreeSize / 1000000000.0);
 
                     }
 

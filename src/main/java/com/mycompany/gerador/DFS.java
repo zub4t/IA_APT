@@ -12,7 +12,8 @@ public class DFS {
         while (!list.isEmpty()) {
             Node current = list.remove(list.size() - 1);
             if (Util.teste(current) == 0) {
-                Util.printSolution(current, pontos);
+                System.out.println("Guardas: " + current.ord.size());
+                //Util.printSolution(current, pontos);
                 break;
             }
             List<Node> aux_list = current.gerarFilhos(map);

@@ -22,7 +22,7 @@ import java.util.TreeSet;
  */
 public class Formiga {
 
-    private static float[][] prob_feromonios = new float[200][200];
+    private static float[][] prob_feromonios = new float[5000][5000];
     private Map<Integer, Float> mapa_probabilidade = new TreeMap<>();
     private int id;
     private List<Integer> pontos_escolhidos = new ArrayList<>();
@@ -255,10 +255,10 @@ public class Formiga {
             }
             for (int i = 1; i < pontos_escolhidos.size(); i++) {
                 if (Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)] <= 1) {
-                    Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)] += 0.001;
+                    Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)] += 0.4;
                 }
             }
-            double test = 0.99;
+            double test = 0.90;
             for (int i = 1; i < pontos_escolhidos.size(); i++) {
                 if (Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)]< test) {
                     flag = false;

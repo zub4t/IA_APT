@@ -36,7 +36,6 @@ public class Greedy2 {
                         rets[retangulo.getId()].pontos_list.clear();
                     }
                     ponto_escolhido.ret_list.clear();
-                    System.out.println("Ponto escolhido : " + ponto_escolhido.id);
                     guardas++;
                     for (int i = 1; i < rets.length; i++) {
                         if (!rets[i].pontos_list.isEmpty() && removido.get(rets[i]) == null) {

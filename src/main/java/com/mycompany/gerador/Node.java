@@ -83,12 +83,32 @@ public class Node implements Comparable<Node> {
 
     @Override
     public int compareTo(Node o) {
-
-        for (int i = 0; i < this.configuracao_atual.length; i++) {
-            if (o.configuracao_atual[i] != this.configuracao_atual[i]) {
+        Set<Integer> retangulo_node1 = new TreeSet<>();
+        Set<Integer> retangulo_node2 = new TreeSet<>();
+        for (int i = 1; i < this.configuracao_atual.length; i++) {
+            if(this.configuracao_atual[i] == -1){
+                for(Ret retangulo : Gerador.pontos[i].ret_list){
+                    retangulo_node1.add(retangulo.getId());
+                }
+            }
+            if(o.configuracao_atual[i] == -1){
+                for(Ret retangulo : Gerador.pontos[i].ret_list){
+                    retangulo_node2.add(retangulo.getId());
+                }
+            }
+            /*if (o.configuracao_atual[i] != this.configuracao_atual[i]) {
                 return o.configuracao_atual[i] - this.configuracao_atual[i];
+            }*/
+        }
+        if(retangulo_node1.size() != retangulo_node2.size()){
+            return retangulo_node1.size() - retangulo_node2.size();
+        } else {
+            retangulo_node1.removeAll(retangulo_node2);
+            if(!retangulo_node1.isEmpty()){
+                return ((retangulo_node2.size() - retangulo_node1.size()) > (retangulo_node2.size() / 2)) ? 1 : -1;
             }
         }
+        
         return 0;
     }
 
@@ -130,16 +150,17 @@ public class Node implements Comparable<Node> {
                             }
                         }
                         if (retanguloNodeSet.size() - retanguloSet.size() >= n) {
-                            Ponto ponto_escolhido = Gerador.pontos[i];
                             boolean adicionar_filho = false;
-                            for (int ponto_id : this.ord) {
-                                for (Ret retangulo : Gerador.pontos[ponto_id].ret_list) {
-                                    if (retangulo.pontos_list.contains((Integer) ponto_escolhido.id)) {
-                                        adicionar_filho = true;
+                            for(Ret retangulo_escolhido : Gerador.pontos[i].ret_list){
+                                for(int ponto_retangulo_escolhido : retangulo_escolhido.pontos_list){
+                                    for(Ret retangulo : Gerador.pontos[i].ret_list){
+                                        if(retanguloNodeSet.contains(retangulo.getId())){
+                                            adicionar_filho = true;
+                                        }
                                     }
                                 }
                             }
-                            if (adicionar_filho) {
+                            if (adicionar_filho || node.ord.size() == 1) {
                                 filhos.add(node);
                                 map.put(node, Boolean.TRUE);
                             }

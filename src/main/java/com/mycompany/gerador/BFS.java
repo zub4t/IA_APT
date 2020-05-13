@@ -16,20 +16,22 @@ public class BFS {
         while (!list.isEmpty()) {
             //retirar o primeiro elemento da queue
             Node current = list.poll();
-            
-            boolean found_solution = false;
+            //if(Runtime.getRuntime().totalMemory() + 500 > Runtime.getRuntime().maxMemory())
+            //System.out.println();
+            //fazer teste para verificar se é uma solução, se for dar print e sair
             //gerar os filhos do no que retiramos da queue e inserir na queue
             List<Node> aux_list = current.gerarFilhos(map);
-            //fazer teste para verificar se o filho é uma solução, se for dar print e sair
+            boolean acabar = false;
             for (Node n : aux_list) {
                 if (Util.teste(n) == 0) {
-                    Util.printSolution(n, pontos);
-                    found_solution = true;
+                    System.out.println("Guardas: " + n.ord.size());
+                    //Util.printSolution(n, pontos);
+                    acabar = true;
                     break;
                 }
                 list.add(n);
             }
-            if(found_solution)
+            if(acabar)
                 break;
         }
     }

@@ -28,7 +28,8 @@ public class Astar {
             Node current = list.pop();
             //fazer teste para verificar se é uma solução, se for dar print e sair
             if (Util.teste(current) == 0) {
-                Util.printSolution(current, pontos);
+                //Util.printSolution(current, pontos);
+                System.out.println("Guardas: " + current.ord.size());
                 break;
             }
             List<Node> aux = current.gerarFilhos(map);
