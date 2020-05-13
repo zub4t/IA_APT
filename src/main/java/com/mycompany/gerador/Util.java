@@ -106,7 +106,7 @@ public class Util {
             if (Gerador.pontos[j] == null) {
                 break;
             }
-            pontos_copy[j] = new Ponto(pontos[j]);
+            pontos_copy[j] = new Ponto(Gerador.pontos[j]);
         }
         return pontos_copy;
 
