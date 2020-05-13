@@ -6,6 +6,7 @@
 package com.mycompany.gerador;
 
 import static com.mycompany.gerador.Gerador.pontos;
+import static com.mycompany.gerador.Gerador.retangulos;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -98,4 +99,43 @@ public class Util {
             }
         }
     }
+
+    public static Ponto[] copyPontos() {
+        Ponto[] pontos_copy = new Ponto[Gerador.pontos.length];
+        for (int j = 1; j < Gerador.pontos.length; j++) {
+            if (Gerador.pontos[j] == null) {
+                break;
+            }
+            pontos_copy[j] = new Ponto(pontos[j]);
+        }
+        return pontos_copy;
+
+    }
+
+    public static Ret[] copyRet() {
+        Ret[] retangulos_copy = new Ret[Gerador.retangulos.length];
+        for (int j = 1; j < Gerador.retangulos.length; j++) {
+            retangulos_copy[j] = new Ret(Gerador.retangulos[j]);
+        }
+        return retangulos_copy;
+
+    }
+
+    public static int[] makeInstancePonto(int cur_ponto_id) {
+
+        int[] ponto_quant_ret = new int[cur_ponto_id];
+        for (int i = 1; i <= cur_ponto_id - 1; i++) {
+            ponto_quant_ret[i] = pontos[i].ret_list.size();
+        }
+        return ponto_quant_ret;
+    }
+
+    public static int[] makeInstanceRet(int num_ret) {
+        int[] ret_quant_ponto = new int[num_ret + 1];
+        for (int i = 1; i <= num_ret; i++) {
+            ret_quant_ponto[i] = retangulos[i].pontos_list.size() - retangulos[i].pontos_guardados;
+        }
+        return ret_quant_ponto;
+    }
+
 }

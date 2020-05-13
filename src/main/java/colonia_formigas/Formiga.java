@@ -127,11 +127,13 @@ public class Formiga {
                 }
             }
         } else {
-            for(int i = 1; i < this.node.pontos.length; i++){
-                if(node.pontos[i] == null)
+            for (int i = 1; i < this.node.pontos.length; i++) {
+                if (node.pontos[i] == null) {
                     break;
-                if(node.pontos[i].ret_list.size() == 3)
+                }
+                if (node.pontos[i].ret_list.size() == 3) {
                     return i;
+                }
             }
         }
 
@@ -188,8 +190,9 @@ public class Formiga {
     }
 
     public void run() {
-
-        for (int k = 1; k <= 200000; k++) {
+        Boolean flag =false;
+        while (!flag) {
+            flag = true;
             boolean first_interation = true;
             this.on_anthill = false;
             pontos_escolhidos.clear();
@@ -251,19 +254,20 @@ public class Formiga {
                 id_escolhido_passado = id_escolhido;
             }
             for (int i = 1; i < pontos_escolhidos.size(); i++) {
-                if (Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)] < 1) {
+                if (Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)] <= 1) {
                     Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)] += 0.001;
+                }
+            }
+            double test = 0.99;
+            for (int i = 1; i < pontos_escolhidos.size(); i++) {
+                if (Formiga.prob_feromonios[pontos_escolhidos.get(i - 1)][pontos_escolhidos.get(i)]< test) {
+                    flag = false;
                 }
             }
             for (int i = 0; i < pontos_escolhidos.size(); i++) {
                 System.out.print(pontos_escolhidos.get(i) + " ");
             }
-            System.out.print("------>" + set_ret.size() + " ------ >");
-
-            if (k == 200000) {
-                System.out.print("");
-            }
-            System.out.println(" " + set_ret.toString());
+            System.out.println("");
 
         }
 

@@ -1,5 +1,6 @@
 package com.mycompany.gerador;
 
+import colonia_formigas.Formiga;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -12,13 +13,14 @@ public class Gerador {
     static Ponto[] pontos = null;
 
     public static void main(String[] args) {
+        Scanner teclado = new Scanner(System.in);
         int num_ret = 0;
         int cur_ponto_id;
-        long startTime = System.nanoTime();
+
         try {
             System.out.println("Incializando programa com o input que está no txt");
             //alterar nesta linha o path do txt
-            File myObj = new File("C:/Users/pedro/Documents/NetBeansProjects/IA_APT2/src/main/java/com/mycompany/gerador/input.txt");
+            File myObj = new File("C:/Users/marco/Documents/NetBeansProjects/Gerador/src/main/java/com/mycompany/gerador/input.txt");
             Scanner myReader = new Scanner(myObj);
             int numero_instancias = myReader.nextInt();
             Map<Ponto, Integer> check;
@@ -54,77 +56,138 @@ public class Gerador {
                         retangulos[id_ret] = retangulo;
                     }
 
-                    Util.printRetToPonto(retangulos, pontos, num_ret);
-                    System.out.println();
-                    Util.printPontoToRet(pontos, retangulos, cur_ponto_id - 1);
-                    System.out.println();
-                    //array em que cada posição é o ponto id e que por exemplo ponto_quant_ret[2] = quantidade de retangulos que o ponto 2 cobre
-                    int[] ponto_quant_ret = new int[cur_ponto_id];
-                    for (int i = 1; i <= cur_ponto_id - 1; i++) {
-                        ponto_quant_ret[i] = pontos[i].ret_list.size();
+                    System.out.println("Deseja vizualizao a configuração importada  ? 1/0");
+                    int conf = teclado.nextInt();
+                    if (conf == 1) {
+                        String conf_res = "";
+                        Util.printRetToPonto(retangulos, pontos, num_ret);
+                        Util.printPontoToRet(pontos, retangulos, cur_ponto_id - 1);
+                        System.out.println(conf_res);
                     }
-                    //array em que cada posição é o retangulo id e que por exemplo ret_quant_ponto[2] = quantidade de pontos que o retangulo 2 tem
-                    int[] ret_quant_ponto = new int[num_ret + 1];
-                    for (int i = 1; i <= num_ret; i++) {
-                        ret_quant_ponto[i] = retangulos[i].pontos_list.size() - retangulos[i].pontos_guardados;
-                    }
-                    System.out.println();
-                    Node root = new Node(ponto_quant_ret, pontos);
-                    //Formiga
-                    Ret[] retangulos_copy = new Ret[retangulos.length];
-                    for (int j = 1; j < retangulos.length; j++) {
-                        retangulos_copy[j] = new Ret(retangulos[j]);
-                    }
-                    Ponto[] pontos_copy = new Ponto[pontos.length];
-                    for (int j = 1; j < pontos.length; j++) {
-                        if (pontos[j] == null) {
-                            break;
+
+                    int escolhido = 0;
+                    while (escolhido != 13) {
+                        System.out.println("Escolha qual  algoritimo quer ver");
+                        System.out.println(""
+                                + "1-Colonia de Formigas"
+                                + "\n2-BFS"
+                                + "\n3-DFS"
+                                + "\n4-Greedy1"
+                                + "\n5-Greedy2"
+                                + "\n6-Greedy3"
+                                + "\n7-BranchAndBound_queue"
+                                + "\n8-BranchAndBound_stack"
+                                + "\n9-Astar"
+                                + "\n10-IDS"
+                                + "\n11-ILS_Random"
+                                + "\n12-ILS_Deterministico"
+                                + "\n13-ir para proxima instancia do input");
+                        escolhido = teclado.nextInt();
+
+                        //array em que cada posição é o ponto id e que por exemplo ponto_quant_ret[2] = quantidade de retangulos que o ponto 2 cobre
+                        int ponto_quant_ret[] = Util.makeInstancePonto(cur_ponto_id);
+                        //array em que cada posição é o retangulo id e que por exemplo ret_quant_ponto[2] = quantidade de pontos que o retangulo 2 tem
+                        int ret_quant_ponto[] = Util.makeInstanceRet(num_ret);
+                        // criar node root 
+                        Node root = new Node(ponto_quant_ret, pontos);
+
+                        Ponto pontos_copy[] = Util.copyPontos();
+                        Ret retangulos_copy[] = Util.copyRet();
+                        long startTime = System.nanoTime();
+
+                        // Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
+                        long heapMaxSize = Runtime.getRuntime().maxMemory();
+                        System.out.println("Tamnho em gigas da heap disponivel:" + heapMaxSize / 1000000000.0);
+
+                        switch (escolhido) {
+                            case 1:
+                                //Formiga
+                                startTime = System.nanoTime();
+                                Formiga formiga = new Formiga(1, pontos_copy, retangulos_copy, root);
+                                formiga.run();
+                                break;
+                            case 2:
+                                //BFS
+                                startTime = System.nanoTime();
+                                BFS.BFS(root, retangulos_copy);
+                                break;
+                            case 3:
+                                //DFS
+                                startTime = System.nanoTime();
+                                DFS.DFS(root);
+
+                                break;
+                            case 4:
+                                startTime = System.nanoTime();
+                                // Greedy 1 = (orientada por vértices)  colocar um guarda no vértice que é partilhado por mais retângulos ainda não cobertos
+                                System.out.println("Greedy 1 = " + Greedy1.decrease_key(ponto_quant_ret, cur_ponto_id, retangulos_copy, pontos_copy));
+                                break;
+                            case 5:
+                                startTime = System.nanoTime();
+                                //Greedy 2 = (orientada por retângulos) escolher o retângulo ainda não coberto que tenha menos vértices incidentes e colocar um guarda num desses vértices que seja partilhado por mais retângulos ainda não cobertos
+                                System.out.println("Greedy 2 = " + Greedy2.increase_key(ret_quant_ponto, num_ret, retangulos_copy, pontos_copy));
+                                break;
+                            case 6:
+                                startTime = System.nanoTime();
+                                // Greedy 3 = (orientada por retângulos) variante de 2. em que, em caso de igualdade entre vértices, opta pelo que cobre retângulos que globalmente tenham mais vértices incidentes
+                                System.out.println("Greedy 3 = " + Greedy3.increase_key(ret_quant_ponto, num_ret, retangulos_copy, pontos_copy));
+
+                                break;
+                            case 7:
+                                startTime = System.nanoTime();
+                                Node BB = BranchBound.branch_bound_stack(root, retangulos_copy, pontos_copy);
+                                Util.printSolution(BB, pontos);
+                                break;
+                            case 8:
+                                startTime = System.nanoTime();
+                                Node B = BranchBound.branch_bound_queue(root, retangulos_copy, pontos_copy);
+                                Util.printSolution(B, pontos);
+                                break;
+                            case 9:
+                                //A*
+                                startTime = System.nanoTime();
+                                Astar.Astar(root, retangulos_copy, pontos_copy);
+                                break;
+                            case 10:
+                                //IDS
+                                startTime = System.nanoTime();
+                                IDS.startIDS(root);
+                                break;
+                            case 11:
+                                //ILS RANDOMs
+                                startTime = System.nanoTime();
+                                Node nn = ILS.ILS_random(root.configuracao_atual, root.configuracao_atual.length, retangulos_copy, pontos_copy);
+                                Util.printSolutionWithoutOrd(nn, pontos);
+
+                                break;
+                            case 12:
+                                //ILS NORMAL
+                                startTime = System.nanoTime();
+                                Node n = ILS.ILS_deterministico(root.configuracao_atual, root.configuracao_atual.length, retangulos_copy, pontos_copy);
+                                Util.printSolutionWithoutOrd(n, pontos);
+                                break;
+                            case 13:
+                                startTime = System.nanoTime();
+                                System.out.println("Avançando");
+                                break;
+
                         }
-                        pontos_copy[j] = new Ponto(pontos[j]);
+
+                        long endTime = System.nanoTime();
+                        long totalTime = endTime - startTime;
+                        System.out.println("tempo total decorrido do algoritimo : " + totalTime / 1000000000.0);
+                        // Get amount of free memory within the heap in bytes. This size will increase // after garbage collection and decrease as new objects are created.
+                        long heapFreeSize = Runtime.getRuntime().freeMemory();
+                        System.out.println("Tamnho em gigas da heap disponivel apos a fim da exucução do algoritimo :" + heapFreeSize / 1000000000.0);
+
                     }
-                    //Formiga formiga = new Formiga(1, pontos_copy, retangulos_copy,root);
-                    //formiga.run();
-                    //BFS
-                    //BFS.BFS(root, retangulos_copy);
-                    //DFS
-                    //DFS.DFS(root);
-                    //DFS com restricoes
-                    //DFS.DFS_com_prop_restr(root, pontos, retangulos);
-                    //IDS
-                    //IDS.startIDS(root);
-                    //A*
-                    Astar.Astar(root, retangulos, pontos);
-                    //Branch and bound
-                    //Node BB = BranchBound.branch_bound(root, retangulos, pontos);
-                    //Util.printSolution(BB, pontos);
-                    //ILS NORMAL
-                    //Node n = ILS.ILS_deterministico(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
-                    //Util.printSolutionWithoutOrd(n, pontos);
-                    //ILS RANDOMs
-                    //Node nn = ILS.ILS_random(root.configuracao_atual, root.configuracao_atual.length, retangulos, pontos);
-                    //Util.printSolutionWithoutOrd(nn, pontos);
-                    /*for(int ponto_id : BB.ord){
-                        Ponto ponto = pontos[ponto_id];
-                        System.out.println("Ponto com id " + ponto.id + " x - " + ponto.x + " y - " + ponto.y);
-                        for(Ret retangulo : ponto.ret_list){
-                            System.out.println("Retangulo id : " + retangulo.getId());
-                        }
-                    }*/
-                    // Greedy 1 = (orientada por vértices)  colocar um guarda no vértice que é partilhado por mais retângulos ainda não cobertos
-                    //System.out.println("Greedy 1 = " + Greedy1.decrease_key(ponto_quant_ret, cur_ponto_id, retangulos, pontos));
-                    //Greedy 2 = (orientada por retângulos) escolher o retângulo ainda não coberto que tenha menos vértices incidentes e colocar um guarda num desses vértices que seja partilhado por mais retângulos ainda não cobertos
-                    //System.out.println("Greedy 2 = " + Greedy2.increase_key(ret_quant_ponto, num_ret, retangulos, pontos));
-                    // Greedy 3 = (orientada por retângulos) variante de 2. em que, em caso de igualdade entre vértices, opta pelo que cobre retângulos que globalmente tenham mais vértices incidentes
-                    //System.out.println("Greedy 3 = " + Greedy3.increase_key(ret_quant_ponto, num_ret, retangulos, pontos));
 
                 }
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Gerador.class.getName()).log(Level.SEVERE, null, ex);
         }
-        long endTime = System.nanoTime();
-        long totalTime = endTime - startTime;
-        System.out.println(totalTime / 1000000000.0);
+
     }
 
 }

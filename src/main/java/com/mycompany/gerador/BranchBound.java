@@ -9,23 +9,25 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 public class BranchBound {
     public static Node branch_bound_stack(Node root, Ret[] retangulos, Ponto[] pontos) {
-        //aqui escolhemos usar uma stack em vez que uma queue para ter a eficiencia do DFS mas o mesmo 
         Stack<Node> list = new Stack<Node>();
         Map<Node, Boolean> map = new TreeMap<>();
         list.add(root);
         int bound = Integer.MAX_VALUE;
         Node solution = null;
+        // enquanto não achar a melhor solução possivel fazer  
         while (!list.isEmpty()) {
             Node current = list.pop();
             int current_bound = current.contarGuardas();
             boolean meter_filhos = true;
+            // verificando se o novo node é uma solução melhor que a atual e se for substituir
             if (Util.teste(current) == 0) {
                 if (current_bound < bound) {
                     bound = current_bound;
                     solution = current;
                 }
             }
-            if (current_bound + current.funcao_h >= bound) {
+            if (current_bound + current.funcao_h > bound) {
+                // caso  meter filhos seja igual a falso não validar  o resto das instancias que esse node poderia gerar
                 meter_filhos = false;
             }
             if (meter_filhos) {
@@ -49,7 +51,7 @@ public class BranchBound {
         return solution;
     }
     public static Node branch_bound_queue(Node root, Ret[] retangulos, Ponto[] pontos) {
-        //aqui escolhemos usar uma stack em vez que uma queue para ter a eficiencia do DFS mas o mesmo 
+     
         Queue<Node> list = new LinkedList<Node>();
         Map<Node, Boolean> map = new TreeMap<>();
         list.add(root);
@@ -65,7 +67,7 @@ public class BranchBound {
                     solution = current;
                 }
             }
-            if (current_bound + current.funcao_h >= bound) {
+            if (current_bound + current.funcao_h > bound) {
                 meter_filhos = false;
             }
             if (meter_filhos) {
