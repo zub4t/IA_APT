@@ -4,10 +4,7 @@
  * and open the template in the editor.
  */
 package com.mycompany.gerador;
-
-import static com.mycompany.gerador.Gerador.decrease_ponto_ret;
 import static com.mycompany.gerador.Gerador.pontos;
-import static com.mycompany.gerador.Gerador.teste;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +18,7 @@ import java.util.TreeMap;
 public class IDS {
 
     public static void startIDS(Node root) {
-        int cur_max_height = 0;
+        int cur_max_height = 7;
         Map<Node, Boolean> map = new TreeMap<>();
         System.out.println(" altura : " + cur_max_height);
         while (!IDS(root, cur_max_height, map)) {
@@ -43,7 +40,7 @@ public class IDS {
                 current = list.remove(0);
                 
             }*/
-            if (teste(current) == 0) {
+            if (Util.teste(current) == 0) {
                 Util.printSolution(current, pontos);
                 while (current != null) {
                     for (int i : current.configuracao_atual) {

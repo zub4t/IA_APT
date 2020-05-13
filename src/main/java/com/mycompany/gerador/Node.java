@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package com.mycompany.gerador;
-
-import static com.mycompany.gerador.Gerador.decrease_ponto_ret;
 import java.util.ArrayList;
 import static java.util.Collections.list;
 import java.util.LinkedList;
@@ -43,25 +41,6 @@ public class Node implements Comparable<Node> {
             this.pontos[i] = p;
             i++;
         }
-    }
-
-    public int calcularHeuristica(Ret[] retangulos, Ponto[] pontos) {
-        Ret[] retangulos_copy = new Ret[retangulos.length];
-        for (int j = 1; j < retangulos.length; j++) {
-            retangulos_copy[j] = new Ret(retangulos[j]);
-        }
-        Ponto[] pontos_copy = new Ponto[pontos.length];
-        for (int j = 1; j < pontos.length; j++) {
-            if (pontos[j] == null) {
-                break;
-            }
-            pontos_copy[j] = new Ponto(pontos[j]);
-        }
-        int[] aux = new int[this.configuracao_atual.length];
-        for (int j = 1; j < this.configuracao_atual.length; j++) {
-            aux[j] = this.configuracao_atual[j];
-        }
-        return Greedy1.decrease_key(aux, this.configuracao_atual.length, retangulos_copy, pontos_copy);
     }
 
     public int contarGuardas() {
@@ -122,7 +101,7 @@ public class Node implements Comparable<Node> {
                     node.ord.add(i);
                     if (map.get(node) == null) {
                         for (Ret ret : node.pontos[i].ret_list) {
-                            decrease_ponto_ret(ret, node, node.pontos[i]);
+                            Util.decrease_ponto_ret(ret, node, node.pontos[i]);
                         }
                         node.pontos[i].ret_list.clear();
                         node.altura = this.altura + 1;
@@ -142,7 +121,7 @@ public class Node implements Comparable<Node> {
                                 }
                             }
                         }
-                        Gerador.endireitarConfiguracao(this, retanguloSet);
+                        Util.endireitarConfiguracao(this, retanguloSet);
                         int n = 0;
                         for(int j = 1; j < this.configuracao_atual.length; j++){
                             if(configuracao_atual[j] > n)

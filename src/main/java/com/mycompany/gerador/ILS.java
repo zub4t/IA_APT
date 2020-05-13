@@ -5,8 +5,6 @@
  */
 package com.mycompany.gerador;
 
-import static com.mycompany.gerador.Gerador.decrease_ponto_ret;
-import static com.mycompany.gerador.Gerador.teste;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +27,8 @@ public class ILS {
         if (node != null && mapa.get(node) == null) {
             mapa.put(node, Boolean.TRUE);
             if (node != null && ((node.contarGuardas() <= nodeSolution.contarGuardas()))) {
+                if((node.contarGuardas() < nodeSolution.contarGuardas()))
+                    System.out.println();
                 nodeSolution = node;
                 stack.push(node);
             }
@@ -68,7 +68,7 @@ public class ILS {
             for (int i = 0; i < list.size(); i++) {
                 int pos = list.get(i);
                 currentSolution.configuracao_atual[pos] = 0;
-                Node testNodeComZero = ILS_heuristic(currentSolution, pontos, retangulos.length - 1);
+                Node testNodeComZero = ILS_testSolution(currentSolution, pontos, retangulos.length - 1);
                 fazerTeste(testNodeComZero, currentSolution, stack, mapa);
                 currentSolution.configuracao_atual[pos] = -1;
                 for (int j = 1; j < currentSolution.configuracao_atual.length; j++) {
@@ -76,7 +76,7 @@ public class ILS {
                     testNode.configuracao_atual[pos] = 0;
                     if (testNode.configuracao_atual[j] == 0 && j != pos) {
                         testNode.configuracao_atual[j] = -1;
-                        Node testNodeSemZero = ILS_heuristic(testNode, pontos, retangulos.length - 1);
+                        Node testNodeSemZero = ILS_testSolution(testNode, pontos, retangulos.length - 1);
                         fazerTeste(testNodeSemZero, currentSolution, stack, mapa);
                     }
                 }
@@ -104,13 +104,9 @@ public class ILS {
         Map<Node, Boolean> mapa = new TreeMap<>();
         nodeSolution = currentSolution;
         stack.add(currentSolution);
-        //normal
         while (!stack.isEmpty()) {
-
             list.clear();
             currentSolution = stack.pop();
-            //if(currentSolution.ord.contains(2) && currentSolution.ord.contains(10) && currentSolution.ord.contains(15) && currentSolution.ord.contains(20) && currentSolution.ord.size() == 4)
-            //System.out.println();
             for (int i = 1; i < currentSolution.configuracao_atual.length; i++) {
                 if (currentSolution.configuracao_atual[i] == -1) {
                     list.add(i);
@@ -119,7 +115,7 @@ public class ILS {
             for (int i = 0; i < list.size(); i++) {
                 int pos = list.get(i);
                 currentSolution.configuracao_atual[pos] = 0;
-                Node testNodeComZero = ILS_heuristic(currentSolution, pontos, retangulos.length - 1);
+                Node testNodeComZero = ILS_testSolution(currentSolution, pontos, retangulos.length - 1);
                 fazerTeste(testNodeComZero, currentSolution, stack, mapa);
                 currentSolution.configuracao_atual[pos] = -1;
                 Set<Integer> numeros_random = new TreeSet<Integer>();
@@ -131,7 +127,7 @@ public class ILS {
                         testNode.configuracao_atual[pos] = 0;
                         if (testNode.configuracao_atual[j] == 0 && j != pos) {
                             testNode.configuracao_atual[j] = -1;
-                            Node testNodeSemZero = ILS_heuristic(testNode, pontos, retangulos.length - 1);
+                            Node testNodeSemZero = ILS_testSolution(testNode, pontos, retangulos.length - 1);
                             fazerTeste(testNodeSemZero, currentSolution, stack, mapa);
                         }
                     }
@@ -142,7 +138,7 @@ public class ILS {
         return nodeSolution;
     }
 
-    public static Node ILS_heuristic(Node node, Ponto[] pontos, int num_ret) {
+    public static Node ILS_testSolution(Node node, Ponto[] pontos, int num_ret) {
         boolean flag = false;
         Set<Integer> set = new TreeSet<>();
         Node node_final = new Node(node);

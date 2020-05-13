@@ -1,93 +1,52 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.gerador;
-
-import static com.mycompany.gerador.Gerador.decrease_ponto_ret;
-import static com.mycompany.gerador.Gerador.pontos;
-import static com.mycompany.gerador.Gerador.teste;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-/**
- *
- * @author pedro
- */
 public class Astar {
-
     public static void Astar(Node root, Ret[] retangulos, Ponto[] pontos) {
-        List<Node> list = new ArrayList<>();
+        Stack <Node> list = new Stack<>();
         Map<Node, Boolean> map = new TreeMap<>();
         list.add(root);
         while (!list.isEmpty()) {
             if (list.size() > 1) {
                 Node escolhido = null;
                 int menor_f = Integer.MAX_VALUE;
+                //verificar na stack qual o que tem menor f(x) (g(x) + h(x)) e apagar o resto da stack para depois só meter o menor
                 for (Node no : list) {
-                    int f = no.funcao_g * (-1) + no.funcao_h;
-                    if (f < menor_f) {
+                    int f = no.funcao_g  + no.funcao_h;
+                    if (f <= menor_f) {
                         menor_f = f;
                         escolhido = no;
                     }
                 }
                 list.clear();
-                list.add(escolhido);
+                list.push(escolhido);
             }
-            Node current = list.remove(0);
-            if (teste(current) == 0) {
+            Node current = list.pop();
+            //fazer teste para verificar se é uma solução, se for dar print e sair
+            if (Util.teste(current) == 0) {
                 Util.printSolution(current, pontos);
                 break;
             }
-            for (int i = 1; i < current.configuracao_atual.length; i++) {
-                Node node = new Node(current);
-                if (node.pontos[i] != null) {
-                    if (node.pontos[i].ret_list.size() == 0) {
-                        node.configuracao_atual[i] = -2;
-                    } else if (node.configuracao_atual[i] != -1 && node.pontos[i].ret_list.size() > 0) {
-                        node.configuracao_atual[i] = -1;
-                        node.ord.add(i);
-                        if (map.get(node) == null) {
-                            for (Ret ret : node.pontos[i].ret_list) {
-                                decrease_ponto_ret(ret, node, node.pontos[i]);
-                            }
-
-                            Set<Integer> set = new TreeSet<>();
-                            for (int j = 1; j < node.configuracao_atual.length; j++) {
-                                if (node.configuracao_atual[j] == -1) {
-                                    for (Ret retangulo : pontos[j].ret_list) {
-                                        set.add(retangulo.getId());
-                                    }
-                                }
-                            }
-                            node.pontos[i].ret_list.clear();
-                            node.funcao_g = set.size();
-                            Ret[] retangulos_copy = new Ret[retangulos.length];
-                            for (int j = 1; j < retangulos.length; j++) {
-                                retangulos_copy[j] = new Ret(retangulos[j]);
-                            }
-                            Ponto[] pontos_copy = new Ponto[pontos.length];
-                            for (int j = 1; j < pontos.length; j++) {
-                                if (pontos[j] == null) {
-                                    break;
-                                }
-                                pontos_copy[j] = new Ponto(pontos[j]);
-                            }
-                            int[] aux = new int[node.configuracao_atual.length];
-                            for (int j = 1; j < node.configuracao_atual.length; j++) {
-                                aux[j] = node.configuracao_atual[j];
-                            }
-                            node.funcao_h = Greedy1.decrease_key(aux, node.configuracao_atual.length, retangulos_copy, pontos_copy);
-                            list.add(node);
-                            map.put(node, Boolean.TRUE);
+            List<Node> aux = current.gerarFilhos(map);
+            for (Node node : aux) {
+                //o set serve para contabilizar os retangulos guardados para cada node
+                Set<Integer> set = new TreeSet<>();
+                for (int j = 1; j < node.configuracao_atual.length; j++) {
+                    if (node.configuracao_atual[j] == -1) {
+                        for (Ret retangulo : pontos[j].ret_list) {
+                            set.add(retangulo.getId());
                         }
                     }
                 }
+                //funcao g = numero de guardas
+                node.funcao_g = node.contarGuardas();
+                //funcao h = numero de retangulos que faltam guardar / 3 com aproximação para cima
+                node.funcao_h = (int)Math.ceil((retangulos.length - set.size()) / 3.0);
+                list.push(node);
             }
         }
     }

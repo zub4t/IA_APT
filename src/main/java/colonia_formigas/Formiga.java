@@ -20,7 +20,7 @@ import java.util.TreeSet;
  *
  * @author pedro
  */
-public class Formiga implements Runnable {
+public class Formiga {
 
     private static float[][] prob_feromonios = new float[200][200];
     private Map<Integer, Float> mapa_probabilidade = new TreeMap<>();
@@ -187,7 +187,6 @@ public class Formiga implements Runnable {
         return mapa_probabilidade_copia;
     }
 
-    @Override
     public void run() {
 
         for (int k = 1; k <= 200000; k++) {
