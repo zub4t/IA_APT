@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.mycompany.gerador;
+
 import java.util.ArrayList;
 import static java.util.Collections.list;
 import java.util.LinkedList;
@@ -123,13 +124,26 @@ public class Node implements Comparable<Node> {
                         }
                         Util.endireitarConfiguracao(this, retanguloSet);
                         int n = 0;
-                        for(int j = 1; j < this.configuracao_atual.length; j++){
-                            if(configuracao_atual[j] > n)
+                        for (int j = 1; j < this.configuracao_atual.length; j++) {
+                            if (configuracao_atual[j] > n) {
                                 n = configuracao_atual[j];
+                            }
                         }
                         if (retanguloNodeSet.size() - retanguloSet.size() >= n) {
-                            filhos.add(node);
-                            map.put(node, Boolean.TRUE);
+                            Ponto ponto_escolhido = Gerador.pontos[i];
+                            boolean adicionar_filho = false;
+                            for (int ponto_id : this.ord) {
+                                for (Ret retangulo : Gerador.pontos[ponto_id].ret_list) {
+                                    if (retangulo.pontos_list.contains((Integer) ponto_escolhido.id)) {
+                                        adicionar_filho = true;
+                                    }
+                                }
+                            }
+                            if (adicionar_filho) {
+                                filhos.add(node);
+                                map.put(node, Boolean.TRUE);
+                            }
+
                         }
                     }
                 }

@@ -65,9 +65,9 @@ public class Gerador {
                         System.out.println(conf_res);
                     }
 
-                    int escolhido = 0;
+                    int escolhido = 2;
                     while (escolhido != 13) {
-                        System.out.println("Escolha qual  algoritimo quer ver");
+                        /*System.out.println("Escolha qual  algoritimo quer ver");
                         System.out.println(""
                                 + "1-Colonia de Formigas"
                                 + "\n2-BFS"
@@ -82,7 +82,7 @@ public class Gerador {
                                 + "\n11-ILS_Random"
                                 + "\n12-ILS_Deterministico"
                                 + "\n13-ir para proxima instancia do input");
-                        escolhido = teclado.nextInt();
+                        escolhido = teclado.nextInt();*/
 
                         //array em que cada posição é o ponto id e que por exemplo ponto_quant_ret[2] = quantidade de retangulos que o ponto 2 cobre
                         int ponto_quant_ret[] = Util.makeInstancePonto(cur_ponto_id);
@@ -110,6 +110,7 @@ public class Gerador {
                                 //BFS
                                 startTime = System.nanoTime();
                                 BFS.BFS(root, retangulos_copy);
+                                escolhido = 13;
                                 break;
                             case 3:
                                 //DFS
